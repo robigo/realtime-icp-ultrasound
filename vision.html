@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>בדיקת ראייה מודרכת | EchoPulse</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="vision.css">
+</head>
+<body>
+  <header class="topbar"><div class="brand">◉ EchoPulse <span class="brand-sub">/ בדיקת ראייה מודרכת</span></div><a class="back-link" href="index.html">חזרה לדמו ←</a></header>
+  <main class="vision-page">
+    <div class="eyebrow">בדיקת ראייה / סינון עצמי</div><h1>לאיזה כיוון פונה האות E?</h1>
+    <p class="lead">תרגיל בסיסי לזיהוי חדות ראייה בכל עין בנפרד. התרגיל אינו בדיקה רפואית מאומתת או אבחנה; הוא אינו מודד לחץ בעין או לחץ תוך־גולגולתי.</p>
+    <section class="panel step" id="setup" aria-labelledby="setup-heading">
+      <h2 id="setup-heading">1. כיוון המסך והמרחק</h2>
+      <ol><li>הצג את המסך מול הנבדק, במרחק <strong>2 מטרים</strong> מהעיניים. מומלץ להיעזר באדם נוסף שיחזיק את הטלפון.</li><li>הצמד סרגל למסך והתאם את הפס למטה לאורך של <strong>5 ס״מ</strong> באמצעות המחוון.</li><li>הרכב משקפיים המשמשים אותך בדרך כלל לראייה מרחוק. כסה את עין שמאל ללא לחץ כדי להתחיל בבדיקת עין ימין.</li></ol>
+      <label for="calibration">התאם את אורך הפס באמצעות המחוון</label>
+      <input id="calibration" type="range" min="80" max="360" value="190" aria-describedby="cal-help">
+      <div class="ruler-wrap"><div id="ruler" class="ruler"></div></div>
+      <p id="cal-help" class="muted">הפס צריך למדוד בדיוק 5 ס״מ על סרגל אמיתי. שינוי גודל תצוגה או מכשיר מחייבים כיול מחדש.</p>
+      <label class="check-label"><input id="confirmed" type="checkbox"> כיילתי בעזרת סרגל ואני שומר על מרחק 2 מטרים.</label>
+      <button type="button" id="start" disabled>התחל בבדיקת עין ימין</button>
+    </section>
+    <section class="panel step" id="test" hidden aria-labelledby="test-heading">
+      <div class="test-head"><div><div class="eyebrow" id="eyeLabel">עין ימין</div><h2 id="test-heading">זהה את כיוון הפתח</h2></div><span id="progress" class="pill">—</span></div>
+      <p id="eyeHelp" class="muted">כסו את עין שמאל בלי ללחוץ עליה. אם קשה לזהות, בחרו ניחוש.</p>
+      <div class="optotype-space"><svg id="optotype" viewBox="0 0 5 5" aria-label="אות E מסובבת" role="img"><path fill="currentColor" d="M0 0H5V1H1V2H4V3H1V4H5V5H0Z"/></svg></div>
+      <div class="direction-grid" aria-label="בחרו לאיזה כיוון פונה פתח האות"><button type="button" data-direction="up">↑ למעלה</button><button type="button" data-direction="right">→ ימינה</button><button type="button" data-direction="down">↓ למטה</button><button type="button" data-direction="left">← שמאלה</button></div>
+      <p class="muted">כל בחירה מציגה סימן חדש. אין צורך להזיז את המסך בין הסימנים.</p>
+    </section>
+    <section class="panel step" id="transition" hidden aria-labelledby="transition-heading"><h2 id="transition-heading">עכשיו בודקים את עין שמאל</h2><p>כסו את עין ימין בלי ללחוץ עליה, ושמרו על מרחק 2 מטרים ועל אותו המסך.</p><button type="button" id="nextEye">התחל בבדיקת עין שמאל</button></section>
+    <section class="panel step" id="results" hidden aria-labelledby="results-heading"><h2 id="results-heading">סיכום התרגיל</h2><p id="resultText" aria-live="polite"></p><p class="muted">השלבים מדורגים לפי גודל האות בלבד. אי אפשר לפרש את התוצאה כאבחנה או כמדד ראייה קליני. אפשר למסור לאיש מקצוע אילו שלבים זוהו בכל עין.</p><button type="button" id="again">התחל מחדש</button></section>
+    <p class="vision-foot">התוצאה נשארת בזיכרון הדפדפן במהלך הבדיקה בלבד ואינה נשלחת לאתר או לשיחת הווידאו. לבדיקה ניידת שעברה מחקרי דיוק, אפשר להיעזר גם ב־<a href="https://www.who.int/teams/noncommunicable-diseases/sensory-functions-disability-and-rehabilitation/whoeyes" target="_blank" rel="noopener noreferrer">WHOeyes</a>, שאף היא אינה מחליפה בדיקת עיניים מקצועית.</p>
+  </main>
+  <script src="vision.js" defer></script>
+</body>
+</html>
