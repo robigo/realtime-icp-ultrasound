@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ultrasound → ICP | Research demo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar"><div class="brand"><span class="mark">◉</span> EchoPulse <span class="brand-sub">/ Research console</span></div><span class="tag">SYNTHETIC DATA · DEMO ONLY</span></header>
+  <main>
+    <div class="heading"><div><div class="eyebrow">SIGNAL ANALYSIS / 001</div><h1>Ultrasound to ICP <span>proxy</span></h1><p>Streaming visualization of simulated ultrasound motion and a normalized waveform proxy.</p></div><div class="status"><span class="dot"></span><span id="status">Loading dataset…</span><small id="sampleCount">—</small></div></div>
+    <section class="stats" aria-label="Current indicators">
+      <article><label>HEART RATE</label><div><strong id="hr">—</strong> <span>bpm</span></div><small>From synthetic beat markers</small></article>
+      <article><label>P2 / P1</label><div><strong id="ratio">—</strong> <span>ratio</span></div><small>Illustrative regional maxima</small></article>
+      <article><label>PULSE AMPLITUDE</label><div><strong id="amplitude">—</strong> <span>z units</span></div><small>Normalized proxy range</small></article>
+      <article><label>SIGNAL QUALITY</label><div><strong id="quality">—</strong> <span>%</span></div><small>Heuristic on synthetic motion</small></article>
+    </section>
+    <div class="grid">
+      <section class="panel wide"><div class="panel-head"><div><div class="eyebrow">01 / WAVEFORM</div><h2>ICP waveform proxy</h2></div><span class="pill teal">● LIVE PLAYBACK</span></div><div class="legend"><span><i class="swatch cyan"></i>ICP proxy (normalized)</span><span><i class="swatch coral"></i>PPG reference</span></div><div class="plot"><canvas id="wave" role="img" aria-label="Scrolling synthetic ICP proxy and PPG reference"></canvas></div><div class="plot-foot"><span>VISIBLE WINDOW <b>6 s</b></span><span>50 SAMPLES / SECOND</span><span id="clock">t = 0.00 s</span></div></section>
+      <section class="panel"><div class="panel-head"><div><div class="eyebrow">02 / ULTRASOUND</div><h2>Motion signal</h2></div><span class="pill">A-LINE / ROI</span></div><div class="plot small"><canvas id="motion" role="img" aria-label="Synthetic echo displacement and optical flow"></canvas></div><div class="legend"><span><i class="swatch cyan"></i>Displacement</span><span><i class="swatch lavender"></i>Optical flow</span></div><div class="metrics"><div><label>DISPLACEMENT</label><strong id="displacement">—</strong><small>sample offset</small></div><div><label>FLOW CONFIDENCE</label><strong id="confidence">—</strong><small>heuristic</small></div></div></section>
+      <section class="panel"><div class="panel-head"><div><div class="eyebrow">03 / MORPHOLOGY</div><h2>Latest complete beat</h2></div><span class="pill">P1 · P2 · P3</span></div><div class="plot small"><canvas id="beat" role="img" aria-label="Latest completed synthetic beat with illustrative P1, P2 and P3 markers"></canvas></div><div class="morph"><div><span>P1</span><strong id="p1">—</strong></div><div><span>P2</span><strong id="p2">—</strong></div><div><span>P3</span><strong id="p3">—</strong></div></div><p class="note">Peak labels are illustrative maxima in fixed regions of a synthetic beat; they are not validated ICP morphology.</p></section>
+    </div>
+    <footer><div><b>Playback controls</b><span>Explore the same 12-second generated sample repeatedly.</span></div><div class="controls"><button id="toggle" type="button">Pause</button><button id="restart" type="button" class="secondary">Restart</button><label>Speed <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label></div></footer>
+    <div class="disclaimer">Research visualization only. The data and waveform are synthetic; values are relative, not mmHg. This display does not estimate or diagnose a patient's intracranial pressure.</div>
+  </main>
+  <script src="app.js" defer></script>
+</body>
+</html>
