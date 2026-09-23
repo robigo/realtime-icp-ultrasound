@@ -7,3 +7,4 @@
 .vision-page .ruler{max-width:none}
 .vision-page #testDistance{display:block;max-width:100%;font-size:14px;margin:8px 0}
 .eye-percentages{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:20px 0}.eye-percentages>div{display:flex;flex-direction:column;gap:5px;padding:16px;border:1px solid #344b5d;border-radius:8px;background:#132534}.eye-percentages span{color:#c4d6df;font-size:13px}.eye-percentages strong{color:#60e4d3;font-size:30px;line-height:1.2}.eye-percentages small{color:#9eb8c4;font-size:12px}@media(max-width:400px){.eye-percentages{grid-template-columns:1fr}}
+.result-comparison{padding:14px;border:1px solid #344b5d;border-radius:8px;background:#132534;color:#d9e8f1;line-height:1.65}
