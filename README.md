@@ -47,6 +47,8 @@ node .\whereby-server.js
 
 Then open <http://127.0.0.1:8080/whereby.html> on the **same computer** and create a technical test room. The API key remains in that terminal session; close the terminal when done. Never paste the API key into chat, a screenshot, a tracked file, or the browser page. Creating the key in the Whereby dashboard does not by itself enable the pilot until it is entered in the local terminal. The remote participant receives only the guest room URL. Do not send the host URL with its privileged `roomKey`.
 
+After creating a room, the host can click **Open vision exercise with meeting ID**. The separate exercise tab shows the same `CALL-…` ID, and its final summary includes both the meeting ID and a distinct `EYE-…` ID for that exercise. This is a reference for manually matching the conversation and the summary; no result is uploaded, stored, or extracted from the video. The local vision link only works on the host computer, not on the remote participant's device. Sharing a result still requires an explicit copy or WhatsApp action from the exercise page.
+
 ## Data
 
 `data/synthetic_echo_to_icp_demo.csv` contains:
