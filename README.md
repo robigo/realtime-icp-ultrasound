@@ -32,6 +32,21 @@ Open `session.html` to generate a cryptographically random 128-bit room token. O
 
 **Do not use this technical pilot for real patient examinations.** Anyone with the link may access the meeting; there is no server-side access control, clinician/patient identity verification, link expiry or revocation, consent management, secure clinical record, provider suitability review, or validated medical protocol. The room token and meeting ID are not patient identifiers. Public GitHub hosting does not solve these gaps. Choose an appropriate video provider, implement these safeguards and verify legal/clinical requirements before using it in a healthcare setting.
 
+The public `meet.jit.si` embedded demo is **limited to short test calls** by the provider; it is not suitable for production embedding.
+
+## Whereby Embedded local technical pilot
+
+`whereby.html` and `whereby-server.js` provide a local-only integration for the Whereby Explore plan. The API key is read from `WHEREBY_API_KEY` on the local server, never placed in browser JavaScript or the public repository. The server listens only on `127.0.0.1` and refuses room-creation requests from other origins. The Whereby API creates a locked, temporary room and returns a guest URL for a second participant plus a host URL used only in the local embedded call. The guest joins on Whereby's site during this local pilot. A dedicated HTTPS site with a protected backend is required before an invitation can open inside our own page on a different device. This is **not suitable for clinical use**; the Explore plan does not include the provider's HIPAA add-on, and the local server has no clinical access controls.
+
+On Windows PowerShell, from the downloaded project folder, with Node.js 22 or later installed:
+
+```powershell
+$env:WHEREBY_API_KEY = Read-Host -Prompt 'Whereby API key'
+node .\whereby-server.js
+```
+
+Then open <http://127.0.0.1:8080/whereby.html> on the **same computer** and create a technical test room. The API key remains in that terminal session; close the terminal when done. Never paste the API key into chat, a screenshot, a tracked file, or the browser page. Creating the key in the Whereby dashboard does not by itself enable the pilot until it is entered in the local terminal. The remote participant receives only the guest room URL. Do not send the host URL with its privileged `roomKey`.
+
 ## Data
 
 `data/synthetic_echo_to_icp_demo.csv` contains:
