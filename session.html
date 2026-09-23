@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>סשן וידאו | EchoPulse</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="vision.css">
+  <link rel="stylesheet" href="session.css">
+</head>
+<body>
+  <header class="topbar"><div class="brand">◉ EchoPulse <span class="brand-sub">/ סשן וידאו</span></div><a class="back-link" href="index.html">חזרה לדמו ←</a></header>
+  <main class="vision-page session-page">
+    <div class="eyebrow">שיחת וידאו / תשתית ניסיונית</div>
+    <h1>שיחת וידאו ובדיקת ראייה מודרכת</h1>
+    <p class="lead">צור קישור אישי לפגישה ושתף אותו עם המשתתף השני. השיחה נפתחת כאן, בתוך הדף, באמצעות שירות Jitsi החיצוני.</p>
+    <section class="panel step" id="createPanel">
+      <h2>יצירת פגישה חדשה</h2>
+      <p>הקישור מכיל מזהה חדר אקראי; כל מי שמחזיק בו עשוי להיכנס לפגישה. אין עדיין כניסה מאומתת, תוקף לקישור או מערכת הרשאות.</p>
+      <button id="createSession" type="button">צור קישור לפגישה</button>
+    </section>
+    <section class="panel step" id="roomPanel" hidden>
+      <h2>פרטי הפגישה</h2>
+      <p class="exam-id">מזהה פגישה: <b id="sessionId" dir="ltr"></b></p>
+      <label for="inviteUrl">הקישור לשליחה למשתתף השני</label>
+      <input id="inviteUrl" readonly dir="ltr" aria-label="קישור אישי לפגישה">
+      <div class="result-actions"><button id="copyInvite" type="button">העתק קישור</button><a id="whatsappInvite" target="_blank" rel="noopener noreferrer">שתף בוואטסאפ</a></div>
+      <p id="inviteHelp" class="muted"></p><p id="copyStatus" class="muted" role="status" aria-live="polite"></p>
+      <p><a id="eyeCheckLink" class="back-link" target="_blank" rel="noopener noreferrer">פתח תרגיל ראייה מודרך ↗</a> — התרגיל נפתח בלשונית נפרדת. אם הטלפון משמש לשיחה, אפשר לבצע את התרגיל אחרי השיחה או במכשיר נוסף.</p>
+      <label class="check-label"><input id="consentVideo" type="checkbox"> אני מבין/ה שהווידאו עובר דרך שירות Jitsi החיצוני, והשימוש כעת הוא לבדיקה טכנית בלבד.</label>
+      <button id="joinVideo" type="button" disabled>פתח וידאו בתוך הדף</button>
+      <button id="leaveVideo" type="button" hidden>צא מהשיחה</button>
+      <p id="videoStatus" class="muted" role="status" aria-live="polite"></p>
+      <div id="videoFrame" class="video-frame" aria-label="שיחת וידאו"></div>
+      <p class="muted">ייתכן שיוצר החדר יתבקש להתחבר לחשבון Jitsi. יש לאשר גישה למצלמה ולמיקרופון בדפדפן. אין הקלטה או שמירת תוצאות באתר הזה.</p>
+    </section>
+    <p class="vision-foot">לשימוש עם מטופלים נדרשים לפני ההפעלה אימות והגבלת גישה, הסכמה מדעת, התאמת ספק הווידאו לשימוש המיועד ותהליך קליני מאומת. מזהה וקישור אינם מאמתים זהות. התרגיל אינו מאבחן מחלות או מודד לחץ תוך־גולגולתי.</p>
+  </main>
+  <script src="session.js" defer></script>
+</body>
+</html>
