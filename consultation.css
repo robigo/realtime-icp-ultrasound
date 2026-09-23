@@ -8,4 +8,5 @@
 .consult-input button{white-space:nowrap}
 .consult-form small{color:#829aaa;font-size:11px}
 .form-error{min-height:17px;color:#ffae9c;font-size:12px}
+.vision-link{display:inline-block;color:#60ead6;margin-top:15px;font-size:13px;font-weight:700;text-underline-offset:3px}
 @media(max-width:760px){.consult{grid-template-columns:1fr;gap:20px}.consult-input{flex-direction:column}.consult-input button{align-self:flex-start}}
