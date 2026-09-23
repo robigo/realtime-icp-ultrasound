@@ -11,7 +11,7 @@
   const linkedCallId = wherebyCallId || (linkedSession && `CALL-${linkedSession.slice(0, 5)}-${linkedSession.slice(5, 10)}-${linkedSession.slice(10, 15)}-${linkedSession.slice(15, 20)}`);
   $('setupLinkedCall').hidden = !linkedCallId;
   $('setupLinkedCallId').textContent = linkedCallId || '';
-  const state = { eye: 0, level: 0, trial: 0, correct: 0, angle: 0, pxPerMm: 0, distanceMm: 400, scores: [null, null], examId: '' };
+  const state = { eye: 0, level: 0, trial: 0, correct: 0, angle: 0, pxPerMm: 0, distanceMm: 400, scores: [null, null], answers: [{ correct: 0, total: 0 }, { correct: 0, total: 0 }], examId: '' };
   const levels = () => levelsByDistance[state.distanceMm];
   const distanceLabel = () => state.distanceMm === 400 ? '40 ס״מ' : '2 מטרים';
   function updateDistanceInstructions() {
@@ -54,12 +54,21 @@
       return;
     }
     const describe = score => score < 0 ? 'לא זוהה השלב הראשון' : `זוהה עד שלב ${score + 1} מתוך ${levels().length}`;
+    const describeAnswers = (eye, percentId, countId) => {
+      const { correct, total } = state.answers[eye];
+      const percent = total ? Math.round(correct / total * 100) : 0;
+      $(percentId).textContent = `${percent}%`;
+      $(countId).textContent = `${correct} מתוך ${total} תשובות נכונות`;
+      return `${percent}% (${correct} מתוך ${total} תשובות)`;
+    };
+    const rightAnswers = describeAnswers(0, 'rightPercent', 'rightCount');
+    const leftAnswers = describeAnswers(1, 'leftPercent', 'leftCount');
     $('resultText').textContent = `עין ימין: ${describe(state.scores[0])}. עין שמאל: ${describe(state.scores[1])}.`;
     $('resultDistance').textContent = distanceLabel();
     $('resultExamId').textContent = state.examId;
     $('linkedCall').hidden = !linkedCallId;
     $('linkedCallId').textContent = linkedCallId || '';
-    const summary = `סיכום תרגיל ראייה מודרך (לא בדיקה רפואית מאומתת)\nמרחק שנבחר: ${distanceLabel()} (לא אומת אוטומטית)\nמזהה בדיקה: ${state.examId}${linkedCallId ? `\nמזהה פגישה: ${linkedCallId}` : ''}\n${$('resultText').textContent}\nהתוצאה אינה אבחנה רפואית ואין להשוות שלבים בין מרחקים שונים.`;
+    const summary = `סיכום תרגיל ראייה מודרך (לא בדיקה רפואית מאומתת)\nמרחק שנבחר: ${distanceLabel()} (לא אומת אוטומטית)\nמזהה בדיקה: ${state.examId}${linkedCallId ? `\nמזהה פגישה: ${linkedCallId}` : ''}\n${$('resultText').textContent}\nאחוז תשובות נכונות: עין ימין ${rightAnswers}; עין שמאל ${leftAnswers}.\nאלה אינם אחוזי ראייה או אבחנה רפואית; אין להשוות שלבים בין מרחקים שונים.`;
     $('shareText').value = summary;
     $('shareWhatsapp').href = `https://wa.me/?text=${encodeURIComponent(summary)}`;
     $('copyStatus').textContent = '';
@@ -68,7 +77,11 @@
 
   function answer(direction) {
     if ($('test').hidden) return;
-    if (direction === directions[state.angle]) state.correct++;
+    if (direction === directions[state.angle]) {
+      state.correct++;
+      state.answers[state.eye].correct++;
+    }
+    state.answers[state.eye].total++;
     state.trial++;
     if (state.trial === 5) {
       const passed = state.correct >= 4;
@@ -94,6 +107,7 @@
     state.trial = 0;
     state.correct = 0;
     state.scores = [-1, -1];
+    state.answers = [{ correct: 0, total: 0 }, { correct: 0, total: 0 }];
     state.examId = newExamId();
     $('testExamId').textContent = state.examId;
     $('eyeLabel').textContent = 'עין ימין';
