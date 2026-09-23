@@ -2,8 +2,9 @@
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
-  // Keep the 40 cm symbols large enough to display their five strokes on typical screens.
-  const levelsByDistance = { 400: [0.05, 0.1, 0.15, 0.2], 2000: [0.1, 0.2, 0.3, 0.5, 0.7, 1.0] };
+  // Tenths of logMAR: the published coarse staircase, followed by 0.1 steps after a failure.
+  const coarseLevels = [10, 8, 5, 2, 0];
+  const minimumSymbolPixels = 10; // Each of the five E strokes must span at least two CSS pixels.
   const directions = ['right', 'down', 'left', 'up'];
   const turns = [0, 90, 180, 270];
   const linkedSession = location.hash.match(/^#session=([0-9a-f]{32})$/i)?.[1]?.toUpperCase() || null;
@@ -11,8 +12,7 @@
   const linkedCallId = wherebyCallId || (linkedSession && `CALL-${linkedSession.slice(0, 5)}-${linkedSession.slice(5, 10)}-${linkedSession.slice(10, 15)}-${linkedSession.slice(15, 20)}`);
   $('setupLinkedCall').hidden = !linkedCallId;
   $('setupLinkedCallId').textContent = linkedCallId || '';
-  const state = { eye: 0, level: 0, trial: 0, correct: 0, angle: 0, pxPerMm: 0, distanceMm: 400, scores: [null, null], answers: [{ correct: 0, total: 0 }, { correct: 0, total: 0 }], examId: '' };
-  const levels = () => levelsByDistance[state.distanceMm];
+  const state = { eye: 0, level: 10, coarseIndex: 0, refining: false, trial: 0, correct: 0, angle: 0, pxPerMm: 0, distanceMm: 400, scores: [null, null], limits: [null, null], answers: [{ correct: 0, total: 0 }, { correct: 0, total: 0 }], examId: '' };
   const distanceLabel = () => state.distanceMm === 400 ? '40 ס״מ' : '2 מטרים';
   function updateDistanceInstructions() {
     const distance = $('testDistance').value === '2000' ? 2000 : 400;
@@ -36,16 +36,29 @@
     for (const id of ['setup', 'test', 'transition', 'results']) $(id).hidden = id !== name;
   };
 
+  function symbolPixels(level) {
+    const heightMm = state.distanceMm * Math.tan((5 / 60) * Math.PI / 180) * Math.pow(10, level / 10);
+    return heightMm * state.pxPerMm;
+  }
+
+  function canDisplay(level) {
+    const space = document.querySelector('.optotype-space');
+    const pixels = symbolPixels(level);
+    // E plus half-letter gap on each side and a border one stroke thick.
+    return pixels >= minimumSymbolPixels && pixels * 2.4 <= Math.min(space.clientWidth, space.clientHeight) - 12;
+  }
+
   function showSymbol() {
     state.angle = Math.floor(Math.random() * 4);
-    // A normal-acuity E is approximately 5 arcminutes high at the chosen distance.
-    const heightMm = state.distanceMm * Math.tan((5 / 60) * Math.PI / 180) / levels()[state.level];
-    const pixels = Math.round(heightMm * state.pxPerMm);
+    const pixels = symbolPixels(state.level);
     const symbol = $('optotype');
     symbol.style.width = `${pixels}px`;
     symbol.style.height = `${pixels}px`;
     symbol.style.transform = `rotate(${turns[state.angle]}deg)`;
-    $('progress').textContent = `שלב ${state.level + 1} מתוך ${levels().length} · סימן ${state.trial + 1} מתוך 5`;
+    const frame = $('crowdingFrame');
+    frame.style.padding = `${pixels / 2}px`;
+    frame.style.borderWidth = `${pixels / 5}px`;
+    $('progress').textContent = `גודל ${ (state.level / 10).toFixed(1) } logMAR · סימן ${state.trial + 1} מתוך 5`;
   }
 
   function finishEye() {
@@ -53,7 +66,12 @@
       section('transition');
       return;
     }
-    const describe = score => score < 0 ? 'לא זוהה השלב הראשון' : `זוהה עד שלב ${score + 1} מתוך ${levels().length}`;
+    const describe = eye => {
+      const score = state.scores[eye];
+      const limit = state.limits[eye];
+      const level = score === null ? 'לא זוהה הגודל ההתחלתי' : `הגודל הקטן ביותר שזוהה: ${(score / 10).toFixed(1)} logMAR תיאורטי`;
+      return `${level}${limit ? `; ${limit}` : ''}`;
+    };
     const describeAnswers = (eye, percentId, countId) => {
       const { correct, total } = state.answers[eye];
       const percent = total ? Math.round(correct / total * 100) : 0;
@@ -63,16 +81,28 @@
     };
     const rightAnswers = describeAnswers(0, 'rightPercent', 'rightCount');
     const leftAnswers = describeAnswers(1, 'leftPercent', 'leftCount');
-    $('resultText').textContent = `עין ימין: ${describe(state.scores[0])}. עין שמאל: ${describe(state.scores[1])}.`;
+    $('resultText').textContent = `עין ימין: ${describe(0)}. עין שמאל: ${describe(1)}.`;
     $('resultDistance').textContent = distanceLabel();
     $('resultExamId').textContent = state.examId;
     $('linkedCall').hidden = !linkedCallId;
     $('linkedCallId').textContent = linkedCallId || '';
-    const summary = `סיכום תרגיל ראייה מודרך (לא בדיקה רפואית מאומתת)\nמרחק שנבחר: ${distanceLabel()} (לא אומת אוטומטית)\nמזהה בדיקה: ${state.examId}${linkedCallId ? `\nמזהה פגישה: ${linkedCallId}` : ''}\n${$('resultText').textContent}\nאחוז תשובות נכונות: עין ימין ${rightAnswers}; עין שמאל ${leftAnswers}.\nאלה אינם אחוזי ראייה או אבחנה רפואית; אין להשוות שלבים בין מרחקים שונים.`;
+    const summary = `סיכום תרגיל ראייה מודרך (לא בדיקה רפואית מאומתת)\nמרחק שנבחר: ${distanceLabel()} (לא אומת אוטומטית)\nמזהה בדיקה: ${state.examId}${linkedCallId ? `\nמזהה פגישה: ${linkedCallId}` : ''}\n${$('resultText').textContent}\nאחוז תשובות נכונות: עין ימין ${rightAnswers}; עין שמאל ${leftAnswers}.\nהגודל התיאורטי מחושב מכיול ידני; האחוזים אינם אחוזי ראייה או ציון WHOeyes.`;
     $('shareText').value = summary;
     $('shareWhatsapp').href = `https://wa.me/?text=${encodeURIComponent(summary)}`;
     $('copyStatus').textContent = '';
     section('results');
+  }
+
+  function advance(nextLevel) {
+    if (!canDisplay(nextLevel)) {
+      state.limits[state.eye] = 'נעצר בשל מגבלת גודל או רזולוציה של המסך';
+      finishEye();
+      return;
+    }
+    state.level = nextLevel;
+    state.trial = 0;
+    state.correct = 0;
+    showSymbol();
   }
 
   function answer(direction) {
@@ -86,13 +116,29 @@
     if (state.trial === 5) {
       const passed = state.correct >= 4;
       if (passed) state.scores[state.eye] = state.level;
-      if (!passed || state.level === levels().length - 1) {
+      if (state.refining) {
+        if (passed || state.level + 1 >= state.scores[state.eye]) {
+          finishEye();
+        } else {
+          advance(state.level + 1);
+        }
+        return;
+      }
+      if (!passed) {
+        if (state.scores[state.eye] === null) finishEye();
+        else {
+          state.refining = true;
+          advance(state.level + 1);
+        }
+        return;
+      }
+      if (state.coarseIndex === coarseLevels.length - 1) {
         finishEye();
         return;
       }
-      state.level++;
-      state.trial = 0;
-      state.correct = 0;
+      state.coarseIndex++;
+      advance(coarseLevels[state.coarseIndex]);
+      return;
     }
     showSymbol();
   }
@@ -103,10 +149,13 @@
     state.pxPerMm = Number($('calibration').value) / 50;
     state.distanceMm = $('testDistance').value === '2000' ? 2000 : 400;
     state.eye = 0;
-    state.level = 0;
+    state.level = 10;
+    state.coarseIndex = 0;
+    state.refining = false;
     state.trial = 0;
     state.correct = 0;
-    state.scores = [-1, -1];
+    state.scores = [null, null];
+    state.limits = [null, null];
     state.answers = [{ correct: 0, total: 0 }, { correct: 0, total: 0 }];
     state.examId = newExamId();
     $('testExamId').textContent = state.examId;
@@ -114,17 +163,27 @@
     $('eyeHelp').textContent = 'כסו את עין שמאל בלי ללחוץ עליה. אם קשה לזהות, בחרו ניחוש.';
     $('transitionHelp').textContent = `כסו את עין ימין בלי ללחוץ עליה, ושמרו על מרחק ${distanceLabel()} ועל אותו המסך.`;
     section('test');
-    showSymbol();
+    if (canDisplay(state.level)) showSymbol();
+    else {
+      state.limits[0] = 'המסך אינו יכול להציג את הגודל ההתחלתי בכיול הנוכחי';
+      finishEye();
+    }
   });
   $('nextEye').addEventListener('click', () => {
     state.eye = 1;
-    state.level = 0;
+    state.level = 10;
+    state.coarseIndex = 0;
+    state.refining = false;
     state.trial = 0;
     state.correct = 0;
     $('eyeLabel').textContent = 'עין שמאל';
     $('eyeHelp').textContent = 'כסו את עין ימין בלי ללחוץ עליה. אם קשה לזהות, בחרו ניחוש.';
     section('test');
-    showSymbol();
+    if (canDisplay(state.level)) showSymbol();
+    else {
+      state.limits[1] = 'המסך אינו יכול להציג את הגודל ההתחלתי בכיול הנוכחי';
+      finishEye();
+    }
   });
   $('again').addEventListener('click', () => {
     state.examId = '';
