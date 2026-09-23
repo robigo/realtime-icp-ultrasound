@@ -5,6 +5,8 @@
   const levels = [0.1, 0.2, 0.3, 0.5, 0.7, 1.0];
   const directions = ['right', 'down', 'left', 'up'];
   const turns = [0, 90, 180, 270];
+  const linkedSession = location.hash.match(/^#session=([0-9a-f]{32})$/i)?.[1]?.toUpperCase() || null;
+  const linkedCallId = linkedSession && `CALL-${linkedSession.slice(0, 5)}-${linkedSession.slice(5, 10)}-${linkedSession.slice(10, 15)}-${linkedSession.slice(15, 20)}`;
   const state = { eye: 0, level: 0, trial: 0, correct: 0, angle: 0, pxPerMm: 0, scores: [null, null], examId: '' };
   function newExamId() {
     const bytes = new Uint8Array(10);
@@ -36,7 +38,9 @@
     const describe = score => score < 0 ? 'לא זוהה השלב הראשון' : `זוהה עד שלב ${score + 1} מתוך ${levels.length}`;
     $('resultText').textContent = `עין ימין: ${describe(state.scores[0])}. עין שמאל: ${describe(state.scores[1])}.`;
     $('resultExamId').textContent = state.examId;
-    const summary = `סיכום תרגיל ראייה מודרך (לא בדיקה רפואית מאומתת)\nמזהה בדיקה: ${state.examId}\n${$('resultText').textContent}\nהתוצאה אינה אבחנה רפואית.`;
+    $('linkedCall').hidden = !linkedCallId;
+    $('linkedCallId').textContent = linkedCallId || '';
+    const summary = `סיכום תרגיל ראייה מודרך (לא בדיקה רפואית מאומתת)\nמזהה בדיקה: ${state.examId}${linkedCallId ? `\nמזהה פגישה: ${linkedCallId}` : ''}\n${$('resultText').textContent}\nהתוצאה אינה אבחנה רפואית.`;
     $('shareText').value = summary;
     $('shareWhatsapp').href = `https://wa.me/?text=${encodeURIComponent(summary)}`;
     $('copyStatus').textContent = '';
