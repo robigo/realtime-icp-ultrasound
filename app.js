@@ -112,7 +112,7 @@
     }
     const info = completeBeat(rows, index);
     drawBeat(info);
-    $('clock').textContent = `t = ${fmt(current.timestamp_s)} s`;
+    $('clock').textContent = `${fmt(current.timestamp_s)} s`;
     $('displacement').textContent = fmt(current.echo_displacement_samples, 3);
     // Confidence is a display heuristic based on recent flow consistency, not a trained estimate.
     const recent = visible.slice(-25);
@@ -143,7 +143,7 @@
     requestAnimationFrame(frame);
   }
 
-  $('toggle').addEventListener('click', () => { state.playing = !state.playing; $('toggle').textContent = state.playing ? 'Pause' : 'Play'; });
+  $('toggle').addEventListener('click', () => { state.playing = !state.playing; $('toggle').textContent = state.playing ? 'השהה' : 'המשך'; });
   $('restart').addEventListener('click', () => { state.index = 0; state.elapsed = 0; render(); });
   $('speed').addEventListener('change', e => { state.speed = Number(e.target.value); });
   $('consultForm').addEventListener('submit', e => {
@@ -153,11 +153,11 @@
     try {
       const meeting = new URL($('meetingUrl').value.trim());
       if (meeting.protocol !== 'https:' || !meeting.hostname || meeting.username || meeting.password) {
-        throw new Error('Enter a secure HTTPS meeting link.');
+        throw new Error('יש להזין קישור מאובטח לפגישה ב־HTTPS.');
       }
       window.open(meeting.href, '_blank', 'noopener,noreferrer');
     } catch (cause) {
-      error.textContent = cause instanceof TypeError ? 'Enter a complete meeting link beginning with https://' : cause.message;
+      error.textContent = cause instanceof TypeError ? 'יש להזין קישור מלא לפגישה שמתחיל ב־https://' : cause.message;
     }
   });
   window.addEventListener('resize', render);
@@ -167,12 +167,12 @@
   });
   input.then(text => {
     state.rows = parseCsv(text);
-    $('status').textContent = 'Sample streaming';
-    $('sampleCount').textContent = `${state.rows.length} samples`;
+    $('status').textContent = 'הנתונים מוצגים';
+    $('sampleCount').textContent = `${state.rows.length} דגימות`;
     render(); requestAnimationFrame(frame);
   }).catch(error => {
-    $('status').textContent = 'Dataset unavailable';
-    $('sampleCount').textContent = error.message;
+    $('status').textContent = 'הנתונים אינם זמינים';
+    $('sampleCount').textContent = 'לא ניתן לטעון את הדגימות';
     console.error('Unable to load synthetic dataset:', error);
   });
 })();
