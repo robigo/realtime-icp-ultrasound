@@ -10,6 +10,7 @@
       if (!response.ok) throw new Error(result.error || 'יצירת החדר נכשלה.');
       $('guestUrl').value = result.roomUrl;
       $('callId').textContent = result.callId;
+      $('openVision').href = `vision.html#call=${encodeURIComponent(result.callId)}`;
       $('shareGuest').href = `https://wa.me/?text=${encodeURIComponent(`קישור לשיחת וידאו לניסוי טכני: ${result.roomUrl}`)}`;
       const embed = document.createElement('whereby-embed');
       embed.setAttribute('room', result.hostRoomUrl);
