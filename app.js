@@ -147,7 +147,7 @@
   $('restart').addEventListener('click', () => { state.index = 0; state.elapsed = 0; render(); });
   $('speed').addEventListener('change', e => { state.speed = Number(e.target.value); });
   window.addEventListener('resize', render);
-  fetch('data/synthetic_echo_to_icp_demo.csv').then(response => {
+  const input = window.DEMO_CSV ? Promise.resolve(window.DEMO_CSV) : fetch('data/synthetic_echo_to_icp_demo.csv').then(response => {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return response.text();
   }).then(text => {
