@@ -150,7 +150,8 @@
   const input = window.DEMO_CSV ? Promise.resolve(window.DEMO_CSV) : fetch('data/synthetic_echo_to_icp_demo.csv').then(response => {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return response.text();
-  }).then(text => {
+  });
+  input.then(text => {
     state.rows = parseCsv(text);
     $('status').textContent = 'Sample streaming';
     $('sampleCount').textContent = `${state.rows.length} samples`;
