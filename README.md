@@ -20,6 +20,10 @@ Open <http://localhost:8080>. No packages, build step, or backend are required. 
 
 The page includes an optional **Join a video consultation** form. A clinician supplies an existing HTTPS meeting link (for example from their usual video meeting service), and the user enters it to open the call in a new browser tab. The site does not create meetings, record calls, store the link or patient details, or transmit the demo waveform. Video service access and its privacy settings are handled by the meeting provider and clinician. A call can support remote assessment, but it is not an ultrasound or ICP measurement.
 
+## Guided eye check
+
+`vision.html` is a separate **unvalidated visual acuity screening exercise** for each eye. It displays randomized tumbling E symbols at a nominal 2 m distance after the user matches a 50 mm bar to a physical ruler. It records responses at six symbol sizes in memory only and reports the smallest level identified. It is not calibrated automatically, clinically validated, a diagnosis, or a measure of intraocular/intracranial pressure. Accuracy depends on screen calibration, viewing distance, ambient conditions, glasses, and whether the other eye is fully covered without pressing it. Use a second device or pause the video call if the call occupies the phone screen. For a validated mobile self-check consider [WHOeyes](https://www.who.int/teams/noncommunicable-diseases/sensory-functions-disability-and-rehabilitation/whoeyes), which the WHO says does not replace a professional eye examination.
+
 ## Data
 
 `data/synthetic_echo_to_icp_demo.csv` contains:
