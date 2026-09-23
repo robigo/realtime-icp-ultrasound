@@ -26,6 +26,12 @@ The page includes an optional **Join a video consultation** form. A clinician su
 
 At the start of each exercise the browser generates a random `EYE-…` examination identifier with cryptographically secure random bytes. The same identifier appears during the exercise and in its final summary. The user can copy the summary or open a prefilled WhatsApp share message to send it deliberately to a clinician. No report is saved or uploaded, no result is transmitted by the video call, and an identifier alone cannot retrieve the report. The clinician reads the shared text; the identifier is a reference for matching that conversation to the result, not an authenticated patient identity.
 
+## In-page video session (technical pilot only)
+
+Open `session.html` to generate a cryptographically random 128-bit room token. On a public HTTPS deployment, the page provides a shareable link with the token in the URL fragment. Both participants open the same page and explicitly click to load the embedded video service (the public `meet.jit.si` deployment); the service handles the actual audio/video, not this repository. The session page links to `vision.html` with the meeting identifier attached; the vision report contains its own examination ID plus the meeting ID, and the user must explicitly share the report. No report travels through the video connection automatically. On `file://` or localhost, sharing a cross-device link is disabled; host the site on HTTPS to enable invitation links. The person creating a room on the public Jitsi service may need to authenticate. Test camera, microphone, and the mobile browser with two separate devices before any launch.
+
+**Do not use this technical pilot for real patient examinations.** Anyone with the link may access the meeting; there is no server-side access control, clinician/patient identity verification, link expiry or revocation, consent management, secure clinical record, provider suitability review, or validated medical protocol. The room token and meeting ID are not patient identifiers. Public GitHub hosting does not solve these gaps. Choose an appropriate video provider, implement these safeguards and verify legal/clinical requirements before using it in a healthcare setting.
+
 ## Data
 
 `data/synthetic_echo_to_icp_demo.csv` contains:
