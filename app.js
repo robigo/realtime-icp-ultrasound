@@ -146,6 +146,20 @@
   $('toggle').addEventListener('click', () => { state.playing = !state.playing; $('toggle').textContent = state.playing ? 'Pause' : 'Play'; });
   $('restart').addEventListener('click', () => { state.index = 0; state.elapsed = 0; render(); });
   $('speed').addEventListener('change', e => { state.speed = Number(e.target.value); });
+  $('consultForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const error = $('meetingError');
+    error.textContent = '';
+    try {
+      const meeting = new URL($('meetingUrl').value.trim());
+      if (meeting.protocol !== 'https:' || !meeting.hostname || meeting.username || meeting.password) {
+        throw new Error('Enter a secure HTTPS meeting link.');
+      }
+      window.open(meeting.href, '_blank', 'noopener,noreferrer');
+    } catch (cause) {
+      error.textContent = cause instanceof TypeError ? 'Enter a complete meeting link beginning with https://' : cause.message;
+    }
+  });
   window.addEventListener('resize', render);
   const input = window.DEMO_CSV ? Promise.resolve(window.DEMO_CSV) : fetch('data/synthetic_echo_to_icp_demo.csv').then(response => {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
