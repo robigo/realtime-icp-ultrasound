@@ -12,7 +12,8 @@
   const linkedCallId = wherebyCallId || (linkedSession && `CALL-${linkedSession.slice(0, 5)}-${linkedSession.slice(5, 10)}-${linkedSession.slice(10, 15)}-${linkedSession.slice(15, 20)}`);
   $('setupLinkedCall').hidden = !linkedCallId;
   $('setupLinkedCallId').textContent = linkedCallId || '';
-  const state = { eye: 0, level: 10, coarseIndex: 0, refining: false, trial: 0, correct: 0, angle: 0, pxPerMm: 0, distanceMm: 400, scores: [null, null], limits: [null, null], answers: [{ correct: 0, total: 0 }, { correct: 0, total: 0 }], examId: '' };
+  const state = { eye: 0, level: 10, coarseIndex: 0, refining: false, trial: 0, correct: 0, angle: 0, pxPerMm: 0, distanceMm: 400, scores: [null, null, null], limits: [null, null, null], answers: [{ correct: 0, total: 0 }, { correct: 0, total: 0 }, { correct: 0, total: 0 }], restReports: [null, null], examId: '' };
+  const eyeNames = ['שתי העיניים', 'עין ימין', 'עין שמאל'];
   const distanceLabel = () => state.distanceMm === 400 ? '40 ס״מ' : '2 מטרים';
   function updateDistanceInstructions() {
     const distance = $('testDistance').value === '2000' ? 2000 : 400;
@@ -33,7 +34,7 @@
     return `EYE-${hex.slice(0, 5)}-${hex.slice(5, 10)}-${hex.slice(10, 15)}-${hex.slice(15)}`;
   }
   const section = name => {
-    for (const id of ['setup', 'test', 'transition', 'results']) $(id).hidden = id !== name;
+    for (const id of ['setup', 'test', 'transition', 'rest', 'results']) $(id).hidden = id !== name;
   };
 
   function symbolPixels(level) {
@@ -58,27 +59,35 @@
     const frame = $('crowdingFrame');
     frame.style.padding = `${pixels / 2}px`;
     frame.style.borderWidth = `${pixels / 5}px`;
-    $('progress').textContent = `גודל ${ (state.level / 10).toFixed(1) } logMAR · סימן ${state.trial + 1} מתוך 5`;
+    $('progress').textContent = `שלב ${state.eye * 2 + 1}/5 · גודל ${(state.level / 10).toFixed(1)} logMAR · סימן ${state.trial + 1}/5`;
   }
 
   function prepareEye() {
-    const isRight = state.eye === 0;
-    const covered = isRight ? 'שמאל' : 'ימין';
-    const tested = isRight ? 'ימין' : 'שמאל';
-    $('eyeStage').textContent = `שלב ${state.eye + 1} מתוך 2`;
-    $('transition-heading').textContent = `מכינים את עין ${tested}`;
-    $('transitionHelp').textContent = `כסו את עין ${covered} בכיסוי אטום בלי ללחוץ עליה, ושמרו על מרחק ${distanceLabel()} ועל אותו המסך.`;
-    $('coverText').textContent = `כיסיתי את עין ${covered} בכיסוי אטום בלי ללחוץ עליה.`;
+    const covered = state.eye === 1 ? 'שמאל' : 'ימין';
+    $('eyeStage').textContent = `שלב ${state.eye * 2 + 1} מתוך 5`;
+    $('transition-heading').textContent = state.eye === 0 ? 'שתי העיניים פתוחות' : `מכינים את ${eyeNames[state.eye]}`;
+    $('transitionHelp').textContent = state.eye === 0
+      ? `הסתכלו במסך בשתי עיניים פתוחות ושמרו על מרחק ${distanceLabel()}.`
+      : `כסו את עין ${covered} בכיסוי אטום בלי ללחוץ עליה, ושמרו על מרחק ${distanceLabel()} ועל אותו המסך.`;
+    $('coverText').textContent = state.eye === 0
+      ? 'שתי העיניים פתוחות ואני שומר על המרחק.'
+      : `כיסיתי את עין ${covered} בכיסוי אטום בלי ללחוץ עליה.`;
     $('coverConfirmed').checked = false;
     $('nextEye').disabled = true;
-    $('nextEye').textContent = `הצג אותיות לעין ${tested}`;
+    $('nextEye').textContent = state.eye === 0 ? 'הצג אותיות לשתי העיניים' : `הצג אותיות ל${eyeNames[state.eye]}`;
     section('transition');
   }
 
+  function showRest() {
+    const first = state.eye === 0;
+    $('restStage').textContent = `שלב ${first ? 2 : 4} מתוך 5`;
+    $('restHelp').textContent = `עצמו את שתי העיניים לפני המעבר ל${first ? 'עין ימין' : 'עין שמאל'}. המסך מציג נקודה; מה אתם חווים בלי לפתוח את העיניים?`;
+    section('rest');
+  }
+
   function finishEye() {
-    if (state.eye === 0) {
-      state.eye = 1;
-      prepareEye();
+    if (state.eye < 2) {
+      showRest();
       return;
     }
     const describe = eye => {
@@ -94,23 +103,26 @@
       $(countId).textContent = `${correct} מתוך ${total} תשובות נכונות`;
       return `${percent}% (${correct} מתוך ${total} תשובות)`;
     };
-    const rightAnswers = describeAnswers(0, 'rightPercent', 'rightCount');
-    const leftAnswers = describeAnswers(1, 'leftPercent', 'leftCount');
-    $('resultText').textContent = `עין ימין: ${describe(0)}. עין שמאל: ${describe(1)}.`;
-    const [right, left] = state.scores;
+    const bothAnswers = describeAnswers(0, 'bothPercent', 'bothCount');
+    const rightAnswers = describeAnswers(1, 'rightPercent', 'rightCount');
+    const leftAnswers = describeAnswers(2, 'leftPercent', 'leftCount');
+    $('resultText').textContent = `שתי עיניים: ${describe(0)}. עין ימין: ${describe(1)}. עין שמאל: ${describe(2)}.`;
+    const [right, left] = state.scores.slice(1);
     const comparison = right === null || left === null
       ? 'לא ניתן להשוות בין שתי העיניים: לפחות עין אחת לא זיהתה את הגודל ההתחלתי או שהמסך לא הציג אותו.'
-      : state.limits.some(Boolean)
+      : state.limits.slice(1).some(Boolean)
         ? 'לפחות עין אחת נעצרה בשל מגבלת המסך; אין להסיק מהגודל האחרון שזוהה על הבדל בראייה בין העיניים.'
         : right === left
           ? 'שתי העיניים זיהו את אותו גודל אות בתרגיל הזה.'
           : `עין ${right < left ? 'ימין' : 'שמאל'} זיהתה אות קטנה יותר בתרגיל. הפער בגודל התיאורטי: ${(Math.abs(right - left) / 10).toFixed(1)} logMAR. זה אינו קובע צורך בעדשות.`;
     $('resultComparison').textContent = comparison;
+    const report = value => value === 'no-detail' ? 'לא זוהתה הנקודה' : 'דווח על אור או צורה';
+    $('restReport').textContent = `דיווח בעיניים עצומות: לפני עין ימין — ${report(state.restReports[0])}; לפני עין שמאל — ${report(state.restReports[1])}. הדיווח אינו חלק מציון חדות הראייה.`;
     $('resultDistance').textContent = distanceLabel();
     $('resultExamId').textContent = state.examId;
     $('linkedCall').hidden = !linkedCallId;
     $('linkedCallId').textContent = linkedCallId || '';
-    const summary = `סיכום תרגיל ראייה מודרך (לא בדיקה רפואית מאומתת)\nמרחק שנבחר: ${distanceLabel()} (לא אומת אוטומטית)\nמזהה בדיקה: ${state.examId}${linkedCallId ? `\nמזהה פגישה: ${linkedCallId}` : ''}\n${$('resultText').textContent}\n${comparison}\nאחוז תשובות נכונות: עין ימין ${rightAnswers}; עין שמאל ${leftAnswers}.\nכיסוי העין אושר ידנית בלבד. הגודל התיאורטי מחושב מכיול ידני; האחוזים אינם אחוזי ראייה או ציון WHOeyes.`;
+    const summary = `סיכום תרגיל ראייה מודרך (לא בדיקה רפואית מאומתת)\nמרחק שנבחר: ${distanceLabel()} (לא אומת אוטומטית)\nמזהה בדיקה: ${state.examId}${linkedCallId ? `\nמזהה פגישה: ${linkedCallId}` : ''}\n${$('resultText').textContent}\n${comparison}\n${$('restReport').textContent}\nאחוז תשובות נכונות: שתי עיניים ${bothAnswers}; עין ימין ${rightAnswers}; עין שמאל ${leftAnswers}.\nכיסוי העין אושר ידנית בלבד. הגודל התיאורטי מחושב מכיול ידני; האחוזים אינם אחוזי ראייה או ציון WHOeyes.`;
     $('shareText').value = summary;
     $('shareWhatsapp').href = `https://wa.me/?text=${encodeURIComponent(summary)}`;
     $('copyStatus').textContent = '';
@@ -179,13 +191,14 @@
     state.refining = false;
     state.trial = 0;
     state.correct = 0;
-    state.scores = [null, null];
-    state.limits = [null, null];
-    state.answers = [{ correct: 0, total: 0 }, { correct: 0, total: 0 }];
+    state.scores = [null, null, null];
+    state.limits = [null, null, null];
+    state.answers = [{ correct: 0, total: 0 }, { correct: 0, total: 0 }, { correct: 0, total: 0 }];
+    state.restReports = [null, null];
     state.examId = newExamId();
     $('testExamId').textContent = state.examId;
-    $('eyeLabel').textContent = 'עין ימין';
-    $('eyeHelp').textContent = 'השאירו את עין שמאל מכוסה בכיסוי אטום. אם קשה לזהות, בחרו ניחוש.';
+    $('eyeLabel').textContent = 'שתי העיניים';
+    $('eyeHelp').textContent = 'הביטו בשתי עיניים פתוחות. אם קשה לזהות, בחרו ניחוש.';
     prepareEye();
   });
   $('nextEye').addEventListener('click', () => {
@@ -195,8 +208,10 @@
     state.refining = false;
     state.trial = 0;
     state.correct = 0;
-    $('eyeLabel').textContent = state.eye === 0 ? 'עין ימין' : 'עין שמאל';
-    $('eyeHelp').textContent = `השאירו את עין ${state.eye === 0 ? 'שמאל' : 'ימין'} מכוסה בכיסוי אטום. אם קשה לזהות, בחרו ניחוש.`;
+    $('eyeLabel').textContent = eyeNames[state.eye];
+    $('eyeHelp').textContent = state.eye === 0
+      ? 'הביטו בשתי עיניים פתוחות. אם קשה לזהות, בחרו ניחוש.'
+      : `השאירו את עין ${state.eye === 1 ? 'שמאל' : 'ימין'} מכוסה בכיסוי אטום. אם קשה לזהות, בחרו ניחוש.`;
     section('test');
     if (canDisplay(state.level)) showSymbol();
     else {
@@ -204,6 +219,14 @@
       finishEye();
     }
   });
+  for (const button of document.querySelectorAll('[data-rest-answer]')) {
+    button.addEventListener('click', () => {
+      if ($('rest').hidden) return;
+      state.restReports[state.eye] = button.dataset.restAnswer;
+      state.eye++;
+      prepareEye();
+    });
+  }
   $('again').addEventListener('click', () => {
     state.examId = '';
     $('shareText').value = '';
