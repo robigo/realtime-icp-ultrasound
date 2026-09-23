@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>סשן וידאו ניסיוני | EchoPulse</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="vision.css">
+  <link rel="stylesheet" href="session.css">
+  <link rel="stylesheet" href="whereby.css">
+  <script type="module" src="https://cdn.srv.whereby.com/embed/v3-embed.js"></script>
+  <script src="whereby.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><div class="brand">◉ EchoPulse <span class="brand-sub">/ וידאו ניסיוני</span></div><a class="back-link" href="index.html">חזרה לדמו ←</a></header>
+  <main class="vision-page session-page">
+    <div class="eyebrow">Whereby Embedded / בדיקה טכנית</div>
+    <h1>שיחת וידאו בתוך הדף</h1>
+    <p class="lead">החדר נוצר באמצעות שרת מקומי ששומר את מפתח ה־API מחוץ לדפדפן. קישור המשתתף ייפתח בשירות Whereby עד שנפרסם את הדף שלנו ב־HTTPS.</p>
+    <section class="panel step">
+      <h2>צור חדר ניסיון</h2>
+      <p>השתמש רק באדם שמסכים להשתתף בניסוי טכני. המסלול החינמי אינו מסלול לשיחות רפואיות עם מטופלים.</p>
+      <button id="createMeeting" type="button">צור חדר וקישור</button>
+      <p id="status" class="muted" role="status" aria-live="polite"></p>
+    </section>
+    <section class="panel step" id="roomPanel" hidden>
+      <h2>פרטי הפגישה</h2>
+      <p class="exam-id">מזהה ניסיון: <b id="callId" dir="ltr"></b></p>
+      <label for="guestUrl">קישור למשתתף השני (נפתח באתר Whereby)</label>
+      <input id="guestUrl" readonly dir="ltr" aria-label="קישור משתתף">
+      <div class="result-actions"><button id="copyGuest" type="button">העתק קישור</button><a id="shareGuest" target="_blank" rel="noopener noreferrer">שתף בוואטסאפ</a></div>
+      <p id="copyStatus" class="muted" role="status" aria-live="polite"></p>
+      <p class="muted">החדר נעול; המשתתף יבקש להיכנס, ועל המארח לאשר אותו. החדר נוצר עם מועד סיום של כשעתיים; סיום זה אינו מנתק שיחה פעילה מיד.</p>
+      <div id="wherebyFrame" class="video-frame active" aria-label="שיחת Whereby"></div>
+      <button id="leaveMeeting" type="button">סגור וידאו בדף שלי</button>
+    </section>
+    <p class="vision-foot">המסלול הזה מיועד לניסוי טכני בלבד. למפגש רפואי נדרשים הסכם מתאים עם הספק, הרשאות, זיהוי משתתפים, הסכמה ותהליך בדיקה מאומת. סגירת הווידאו בדף אינה מוחקת את החדר אצל Whereby.</p>
+  </main>
+</body>
+</html>
