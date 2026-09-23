@@ -6,7 +6,10 @@
   const directions = ['right', 'down', 'left', 'up'];
   const turns = [0, 90, 180, 270];
   const linkedSession = location.hash.match(/^#session=([0-9a-f]{32})$/i)?.[1]?.toUpperCase() || null;
-  const linkedCallId = linkedSession && `CALL-${linkedSession.slice(0, 5)}-${linkedSession.slice(5, 10)}-${linkedSession.slice(10, 15)}-${linkedSession.slice(15, 20)}`;
+  const wherebyCallId = location.hash.match(/^#call=(CALL-[0-9a-f]{20})$/i)?.[1]?.toUpperCase() || null;
+  const linkedCallId = wherebyCallId || (linkedSession && `CALL-${linkedSession.slice(0, 5)}-${linkedSession.slice(5, 10)}-${linkedSession.slice(10, 15)}-${linkedSession.slice(15, 20)}`);
+  $('setupLinkedCall').hidden = !linkedCallId;
+  $('setupLinkedCallId').textContent = linkedCallId || '';
   const state = { eye: 0, level: 0, trial: 0, correct: 0, angle: 0, pxPerMm: 0, scores: [null, null], examId: '' };
   function newExamId() {
     const bytes = new Uint8Array(10);
