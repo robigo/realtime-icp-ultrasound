@@ -14,13 +14,13 @@
 <body>
   <header class="topbar"><div class="brand">◉ EchoPulse <span class="brand-sub">/ וידאו ניסיוני</span></div><a class="back-link" href="index.html">חזרה לדמו ←</a></header>
   <main class="vision-page session-page">
-    <div class="eyebrow">Whereby Embedded / בדיקה טכנית</div>
+    <div class="eyebrow" id="meetingProvider">Whereby Embedded / בדיקה טכנית</div>
     <h1>שיחת וידאו בתוך הדף</h1>
-    <p class="lead">החדר נוצר באמצעות שרת מקומי ששומר את מפתח ה־API מחוץ לדפדפן. קישור המשתתף ייפתח בשירות Whereby עד שנפרסם את הדף שלנו ב־HTTPS.</p>
+    <p class="lead" id="meetingIntro">חדר Whereby נוצר באמצעות שרת מקומי ששומר את מפתח ה־API מחוץ לדפדפן. באתר הציבורי אפשר ליצור קישור לחדר ניסיון בשירות Jitsi.</p>
     <section class="panel step">
-      <h2>צור חדר ניסיון</h2>
+      <h2 id="meetingHeading">צור חדר ניסיון</h2>
       <p>השתמש רק באדם שמסכים להשתתף בניסוי טכני. המסלול החינמי אינו מסלול לשיחות רפואיות עם מטופלים.</p>
-      <button id="createMeeting" type="button">צור חדר וקישור</button>
+      <button id="createMeeting" type="button">צור חדר וקישור ב־Whereby</button>
       <p id="status" class="muted" role="status" aria-live="polite"></p>
     </section>
     <section class="panel step" id="roomPanel" hidden>
