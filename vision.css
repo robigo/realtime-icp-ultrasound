@@ -5,3 +5,4 @@
 .vision-page #calibration{display:block;height:30px;cursor:pointer}
 .vision-page .ruler-wrap{overflow-x:auto}
 .vision-page .ruler{max-width:none}
+.vision-page #testDistance{display:block;max-width:100%;font-size:14px;margin:8px 0}
