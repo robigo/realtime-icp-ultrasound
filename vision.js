@@ -5,7 +5,13 @@
   const levels = [0.1, 0.2, 0.3, 0.5, 0.7, 1.0];
   const directions = ['right', 'down', 'left', 'up'];
   const turns = [0, 90, 180, 270];
-  const state = { eye: 0, level: 0, trial: 0, correct: 0, angle: 0, pxPerMm: 0, scores: [null, null] };
+  const state = { eye: 0, level: 0, trial: 0, correct: 0, angle: 0, pxPerMm: 0, scores: [null, null], examId: '' };
+  function newExamId() {
+    const bytes = new Uint8Array(10);
+    crypto.getRandomValues(bytes);
+    const hex = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('').toUpperCase();
+    return `EYE-${hex.slice(0, 5)}-${hex.slice(5, 10)}-${hex.slice(10, 15)}-${hex.slice(15)}`;
+  }
   const section = name => {
     for (const id of ['setup', 'test', 'transition', 'results']) $(id).hidden = id !== name;
   };
@@ -29,6 +35,11 @@
     }
     const describe = score => score < 0 ? 'לא זוהה השלב הראשון' : `זוהה עד שלב ${score + 1} מתוך ${levels.length}`;
     $('resultText').textContent = `עין ימין: ${describe(state.scores[0])}. עין שמאל: ${describe(state.scores[1])}.`;
+    $('resultExamId').textContent = state.examId;
+    const summary = `סיכום תרגיל ראייה מודרך (לא בדיקה רפואית מאומתת)\nמזהה בדיקה: ${state.examId}\n${$('resultText').textContent}\nהתוצאה אינה אבחנה רפואית.`;
+    $('shareText').value = summary;
+    $('shareWhatsapp').href = `https://wa.me/?text=${encodeURIComponent(summary)}`;
+    $('copyStatus').textContent = '';
     section('results');
   }
 
@@ -59,6 +70,8 @@
     state.trial = 0;
     state.correct = 0;
     state.scores = [-1, -1];
+    state.examId = newExamId();
+    $('testExamId').textContent = state.examId;
     $('eyeLabel').textContent = 'עין ימין';
     $('eyeHelp').textContent = 'כסו את עין שמאל בלי ללחוץ עליה. אם קשה לזהות, בחרו ניחוש.';
     section('test');
@@ -75,9 +88,22 @@
     showSymbol();
   });
   $('again').addEventListener('click', () => {
+    state.examId = '';
+    $('shareText').value = '';
+    $('shareWhatsapp').removeAttribute('href');
     $('confirmed').checked = false;
     $('start').disabled = true;
     section('setup');
+  });
+  $('copyResult').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText($('shareText').value);
+      $('copyStatus').textContent = 'הסיכום הועתק.';
+    } catch (_) {
+      $('shareText').focus();
+      $('shareText').select();
+      $('copyStatus').textContent = 'בחרנו את הסיכום; אפשר להעתיק אותו ידנית.';
+    }
   });
   for (const button of document.querySelectorAll('[data-direction]')) {
     button.addEventListener('click', () => answer(button.dataset.direction));
