@@ -61,9 +61,24 @@
     $('progress').textContent = `גודל ${ (state.level / 10).toFixed(1) } logMAR · סימן ${state.trial + 1} מתוך 5`;
   }
 
+  function prepareEye() {
+    const isRight = state.eye === 0;
+    const covered = isRight ? 'שמאל' : 'ימין';
+    const tested = isRight ? 'ימין' : 'שמאל';
+    $('eyeStage').textContent = `שלב ${state.eye + 1} מתוך 2`;
+    $('transition-heading').textContent = `מכינים את עין ${tested}`;
+    $('transitionHelp').textContent = `כסו את עין ${covered} בכיסוי אטום בלי ללחוץ עליה, ושמרו על מרחק ${distanceLabel()} ועל אותו המסך.`;
+    $('coverText').textContent = `כיסיתי את עין ${covered} בכיסוי אטום בלי ללחוץ עליה.`;
+    $('coverConfirmed').checked = false;
+    $('nextEye').disabled = true;
+    $('nextEye').textContent = `הצג אותיות לעין ${tested}`;
+    section('transition');
+  }
+
   function finishEye() {
     if (state.eye === 0) {
-      section('transition');
+      state.eye = 1;
+      prepareEye();
       return;
     }
     const describe = eye => {
@@ -82,11 +97,20 @@
     const rightAnswers = describeAnswers(0, 'rightPercent', 'rightCount');
     const leftAnswers = describeAnswers(1, 'leftPercent', 'leftCount');
     $('resultText').textContent = `עין ימין: ${describe(0)}. עין שמאל: ${describe(1)}.`;
+    const [right, left] = state.scores;
+    const comparison = right === null || left === null
+      ? 'לא ניתן להשוות בין שתי העיניים: לפחות עין אחת לא זיהתה את הגודל ההתחלתי או שהמסך לא הציג אותו.'
+      : state.limits.some(Boolean)
+        ? 'לפחות עין אחת נעצרה בשל מגבלת המסך; אין להסיק מהגודל האחרון שזוהה על הבדל בראייה בין העיניים.'
+        : right === left
+          ? 'שתי העיניים זיהו את אותו גודל אות בתרגיל הזה.'
+          : `עין ${right < left ? 'ימין' : 'שמאל'} זיהתה אות קטנה יותר בתרגיל. הפער בגודל התיאורטי: ${(Math.abs(right - left) / 10).toFixed(1)} logMAR. זה אינו קובע צורך בעדשות.`;
+    $('resultComparison').textContent = comparison;
     $('resultDistance').textContent = distanceLabel();
     $('resultExamId').textContent = state.examId;
     $('linkedCall').hidden = !linkedCallId;
     $('linkedCallId').textContent = linkedCallId || '';
-    const summary = `סיכום תרגיל ראייה מודרך (לא בדיקה רפואית מאומתת)\nמרחק שנבחר: ${distanceLabel()} (לא אומת אוטומטית)\nמזהה בדיקה: ${state.examId}${linkedCallId ? `\nמזהה פגישה: ${linkedCallId}` : ''}\n${$('resultText').textContent}\nאחוז תשובות נכונות: עין ימין ${rightAnswers}; עין שמאל ${leftAnswers}.\nהגודל התיאורטי מחושב מכיול ידני; האחוזים אינם אחוזי ראייה או ציון WHOeyes.`;
+    const summary = `סיכום תרגיל ראייה מודרך (לא בדיקה רפואית מאומתת)\nמרחק שנבחר: ${distanceLabel()} (לא אומת אוטומטית)\nמזהה בדיקה: ${state.examId}${linkedCallId ? `\nמזהה פגישה: ${linkedCallId}` : ''}\n${$('resultText').textContent}\n${comparison}\nאחוז תשובות נכונות: עין ימין ${rightAnswers}; עין שמאל ${leftAnswers}.\nכיסוי העין אושר ידנית בלבד. הגודל התיאורטי מחושב מכיול ידני; האחוזים אינם אחוזי ראייה או ציון WHOeyes.`;
     $('shareText').value = summary;
     $('shareWhatsapp').href = `https://wa.me/?text=${encodeURIComponent(summary)}`;
     $('copyStatus').textContent = '';
@@ -145,6 +169,7 @@
 
   $('calibration').addEventListener('input', e => { $('ruler').style.width = `${e.target.value}px`; });
   $('confirmed').addEventListener('change', e => { $('start').disabled = !e.target.checked; });
+  $('coverConfirmed').addEventListener('change', e => { $('nextEye').disabled = !e.target.checked; });
   $('start').addEventListener('click', () => {
     state.pxPerMm = Number($('calibration').value) / 50;
     state.distanceMm = $('testDistance').value === '2000' ? 2000 : 400;
@@ -160,28 +185,22 @@
     state.examId = newExamId();
     $('testExamId').textContent = state.examId;
     $('eyeLabel').textContent = 'עין ימין';
-    $('eyeHelp').textContent = 'כסו את עין שמאל בלי ללחוץ עליה. אם קשה לזהות, בחרו ניחוש.';
-    $('transitionHelp').textContent = `כסו את עין ימין בלי ללחוץ עליה, ושמרו על מרחק ${distanceLabel()} ועל אותו המסך.`;
-    section('test');
-    if (canDisplay(state.level)) showSymbol();
-    else {
-      state.limits[0] = 'המסך אינו יכול להציג את הגודל ההתחלתי בכיול הנוכחי';
-      finishEye();
-    }
+    $('eyeHelp').textContent = 'השאירו את עין שמאל מכוסה בכיסוי אטום. אם קשה לזהות, בחרו ניחוש.';
+    prepareEye();
   });
   $('nextEye').addEventListener('click', () => {
-    state.eye = 1;
+    if (!$('coverConfirmed').checked) return;
     state.level = 10;
     state.coarseIndex = 0;
     state.refining = false;
     state.trial = 0;
     state.correct = 0;
-    $('eyeLabel').textContent = 'עין שמאל';
-    $('eyeHelp').textContent = 'כסו את עין ימין בלי ללחוץ עליה. אם קשה לזהות, בחרו ניחוש.';
+    $('eyeLabel').textContent = state.eye === 0 ? 'עין ימין' : 'עין שמאל';
+    $('eyeHelp').textContent = `השאירו את עין ${state.eye === 0 ? 'שמאל' : 'ימין'} מכוסה בכיסוי אטום. אם קשה לזהות, בחרו ניחוש.`;
     section('test');
     if (canDisplay(state.level)) showSymbol();
     else {
-      state.limits[1] = 'המסך אינו יכול להציג את הגודל ההתחלתי בכיול הנוכחי';
+      state.limits[state.eye] = 'המסך אינו יכול להציג את הגודל ההתחלתי בכיול הנוכחי';
       finishEye();
     }
   });
