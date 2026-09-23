@@ -6,13 +6,15 @@ A browser based playback of **synthetic**, ultrasound inspired motion data and a
 
 ## Run locally
 
-From the repository root:
+Open `index.html` in your browser by double-clicking it. The bundled `data.js` lets the demo work offline, with no Python or local server.
+
+Alternatively, from the repository root:
 
 ```bash
 python3 -m http.server 8080
 ```
 
-Open <http://localhost:8080>. No packages, build step, or backend are required. Opening `index.html` directly as a file may block CSV loading in the browser; serve it over HTTP.
+Open <http://localhost:8080>. No packages, build step, or backend are required. The `data/` CSV is kept as a separate, reusable source file; `data.js` contains an embedded copy for direct browser opening.
 
 ## Data
 
