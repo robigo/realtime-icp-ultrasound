@@ -1,0 +1,11 @@
+.consult{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,1fr);align-items:center;gap:32px;margin-top:18px}
+.consult p{margin-top:10px;max-width:550px;font-size:13px}
+.consult .consult-note{font-size:11px;color:#829aaa}
+.consult-form{display:flex;flex-direction:column;gap:7px}
+.consult-input{display:flex;gap:9px}
+.consult-input input{min-width:0;flex:1;background:#0a1521;border:1px solid #385067;border-radius:5px;color:#e6f0fa;padding:10px 12px;font:inherit;font-size:13px}
+.consult-input input:focus{outline:2px solid #50d6c7;outline-offset:2px}
+.consult-input button{white-space:nowrap}
+.consult-form small{color:#829aaa;font-size:11px}
+.form-error{min-height:17px;color:#ffae9c;font-size:12px}
+@media(max-width:760px){.consult{grid-template-columns:1fr;gap:20px}.consult-input{flex-direction:column}.consult-input button{align-self:flex-start}}
