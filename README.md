@@ -16,13 +16,23 @@ python3 -m http.server 8080
 
 Open <http://localhost:8080>. No packages, build step, or backend are required. The `data/` CSV is kept as a separate, reusable source file; `data.js` contains an embedded copy for direct browser opening.
 
+### Preview on an iPhone on the same Wi-Fi
+
+`whereby-server.js` intentionally accepts connections only from the computer itself. To preview the static pages on an iPhone, leave that server running and open a second PowerShell window in the project folder. Run `ipconfig` and find the computer's Wi-Fi IPv4 address (for example `192.168.1.23`). Then run:
+
+```powershell
+& "$env:USERPROFILE\Downloads\node.exe" .\iphone-server.js 192.168.1.23
+```
+
+Replace the example address with the computer's actual address. If Node is installed system-wide, use `node .\iphone-server.js 192.168.1.23`. Open the address printed by this command in **Safari on the iPhone**, on the same Wi-Fi. Windows Firewall may ask to allow Node on private networks; some guest or managed Wi-Fi networks isolate devices. This serves the static demo and vision exercise only, on port 8082. It does not provide the Whereby API or create video rooms, and does not use `WHEREBY_API_KEY`. Stop it with Ctrl+C. Camera/microphone access in a video iframe on an HTTP LAN address needs a proper HTTPS deployment; open the Whereby meeting itself via its HTTPS guest link for a video test.
+
 ## Video consultation link
 
 The page includes an optional **Join a video consultation** form. A clinician supplies an existing HTTPS meeting link (for example from their usual video meeting service), and the user enters it to open the call in a new browser tab. The site does not create meetings, record calls, store the link or patient details, or transmit the demo waveform. Video service access and its privacy settings are handled by the meeting provider and clinician. A call can support remote assessment, but it is not an ultrasound or ICP measurement.
 
 ## Guided eye check
 
-`vision.html` is a separate **unvalidated visual acuity screening exercise** for each eye. It displays randomized tumbling E symbols at a nominal 2 m distance after the user matches a 50 mm bar to a physical ruler. It records responses at six symbol sizes in memory only and reports the smallest level identified. It is not calibrated automatically, clinically validated, a diagnosis, or a measure of intraocular/intracranial pressure. Accuracy depends on screen calibration, viewing distance, ambient conditions, glasses, and whether the other eye is fully covered without pressing it. Use a second device or pause the video call if the call occupies the phone screen. For a validated mobile self-check consider [WHOeyes](https://www.who.int/teams/noncommunicable-diseases/sensory-functions-disability-and-rehabilitation/whoeyes), which the WHO says does not replace a professional eye examination.
+`vision.html` is a separate **unvalidated visual acuity screening exercise** for each eye. It displays randomized tumbling E symbols at a user-selected 40 cm near or 2 m distance after the user matches a 50 mm bar to a physical ruler. It records responses in memory only and reports the smallest level identified; levels at different distances are not comparable. It is not calibrated automatically, clinically validated, a diagnosis, or a measure of intraocular/intracranial pressure. Accuracy depends on screen calibration, viewing distance, ambient conditions, glasses, and whether the other eye is fully covered without pressing it. Use a second device or pause the video call if the call occupies the phone screen. For a validated mobile self-check consider [WHOeyes](https://www.who.int/teams/noncommunicable-diseases/sensory-functions-disability-and-rehabilitation/whoeyes), which the WHO says does not replace a professional eye examination.
 
 At the start of each exercise the browser generates a random `EYE-…` examination identifier with cryptographically secure random bytes. The same identifier appears during the exercise and in its final summary. The user can copy the summary or open a prefilled WhatsApp share message to send it deliberately to a clinician. No report is saved or uploaded, no result is transmitted by the video call, and an identifier alone cannot retrieve the report. The clinician reads the shared text; the identifier is a reference for matching that conversation to the result, not an authenticated patient identity.
 
