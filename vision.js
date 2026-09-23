@@ -2,7 +2,8 @@
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
-  const levels = [0.1, 0.2, 0.3, 0.5, 0.7, 1.0];
+  // Keep the 40 cm symbols large enough to display their five strokes on typical screens.
+  const levelsByDistance = { 400: [0.05, 0.1, 0.15, 0.2], 2000: [0.1, 0.2, 0.3, 0.5, 0.7, 1.0] };
   const directions = ['right', 'down', 'left', 'up'];
   const turns = [0, 90, 180, 270];
   const linkedSession = location.hash.match(/^#session=([0-9a-f]{32})$/i)?.[1]?.toUpperCase() || null;
@@ -10,7 +11,21 @@
   const linkedCallId = wherebyCallId || (linkedSession && `CALL-${linkedSession.slice(0, 5)}-${linkedSession.slice(5, 10)}-${linkedSession.slice(10, 15)}-${linkedSession.slice(15, 20)}`);
   $('setupLinkedCall').hidden = !linkedCallId;
   $('setupLinkedCallId').textContent = linkedCallId || '';
-  const state = { eye: 0, level: 0, trial: 0, correct: 0, angle: 0, pxPerMm: 0, scores: [null, null], examId: '' };
+  const state = { eye: 0, level: 0, trial: 0, correct: 0, angle: 0, pxPerMm: 0, distanceMm: 400, scores: [null, null], examId: '' };
+  const levels = () => levelsByDistance[state.distanceMm];
+  const distanceLabel = () => state.distanceMm === 400 ? '40 ס״מ' : '2 מטרים';
+  function updateDistanceInstructions() {
+    const distance = $('testDistance').value === '2000' ? 2000 : 400;
+    const label = distance === 400 ? '40 ס״מ' : '2 מטרים';
+    $('distanceInstruction').textContent = label;
+    $('glassesInstruction').textContent = distance === 400
+      ? 'אם אתה משתמש במשקפיים לקריאה, הרכב אותם.'
+      : 'הרכב משקפיים המשמשים אותך בדרך כלל לראייה מרחוק.';
+    $('confirmedText').textContent = `כיילתי בעזרת סרגל ואני שומר על מרחק ${label}.`;
+    $('confirmed').checked = false;
+    $('start').disabled = true;
+  }
+  $('testDistance').addEventListener('change', updateDistanceInstructions);
   function newExamId() {
     const bytes = new Uint8Array(10);
     crypto.getRandomValues(bytes);
@@ -24,13 +39,13 @@
   function showSymbol() {
     state.angle = Math.floor(Math.random() * 4);
     // A normal-acuity E is approximately 5 arcminutes high at the chosen distance.
-    const heightMm = 2000 * Math.tan((5 / 60) * Math.PI / 180) / levels[state.level];
+    const heightMm = state.distanceMm * Math.tan((5 / 60) * Math.PI / 180) / levels()[state.level];
     const pixels = Math.round(heightMm * state.pxPerMm);
     const symbol = $('optotype');
     symbol.style.width = `${pixels}px`;
     symbol.style.height = `${pixels}px`;
     symbol.style.transform = `rotate(${turns[state.angle]}deg)`;
-    $('progress').textContent = `שלב ${state.level + 1} מתוך ${levels.length} · סימן ${state.trial + 1} מתוך 5`;
+    $('progress').textContent = `שלב ${state.level + 1} מתוך ${levels().length} · סימן ${state.trial + 1} מתוך 5`;
   }
 
   function finishEye() {
@@ -38,12 +53,13 @@
       section('transition');
       return;
     }
-    const describe = score => score < 0 ? 'לא זוהה השלב הראשון' : `זוהה עד שלב ${score + 1} מתוך ${levels.length}`;
+    const describe = score => score < 0 ? 'לא זוהה השלב הראשון' : `זוהה עד שלב ${score + 1} מתוך ${levels().length}`;
     $('resultText').textContent = `עין ימין: ${describe(state.scores[0])}. עין שמאל: ${describe(state.scores[1])}.`;
+    $('resultDistance').textContent = distanceLabel();
     $('resultExamId').textContent = state.examId;
     $('linkedCall').hidden = !linkedCallId;
     $('linkedCallId').textContent = linkedCallId || '';
-    const summary = `סיכום תרגיל ראייה מודרך (לא בדיקה רפואית מאומתת)\nמזהה בדיקה: ${state.examId}${linkedCallId ? `\nמזהה פגישה: ${linkedCallId}` : ''}\n${$('resultText').textContent}\nהתוצאה אינה אבחנה רפואית.`;
+    const summary = `סיכום תרגיל ראייה מודרך (לא בדיקה רפואית מאומתת)\nמרחק שנבחר: ${distanceLabel()} (לא אומת אוטומטית)\nמזהה בדיקה: ${state.examId}${linkedCallId ? `\nמזהה פגישה: ${linkedCallId}` : ''}\n${$('resultText').textContent}\nהתוצאה אינה אבחנה רפואית ואין להשוות שלבים בין מרחקים שונים.`;
     $('shareText').value = summary;
     $('shareWhatsapp').href = `https://wa.me/?text=${encodeURIComponent(summary)}`;
     $('copyStatus').textContent = '';
@@ -57,7 +73,7 @@
     if (state.trial === 5) {
       const passed = state.correct >= 4;
       if (passed) state.scores[state.eye] = state.level;
-      if (!passed || state.level === levels.length - 1) {
+      if (!passed || state.level === levels().length - 1) {
         finishEye();
         return;
       }
@@ -72,6 +88,7 @@
   $('confirmed').addEventListener('change', e => { $('start').disabled = !e.target.checked; });
   $('start').addEventListener('click', () => {
     state.pxPerMm = Number($('calibration').value) / 50;
+    state.distanceMm = $('testDistance').value === '2000' ? 2000 : 400;
     state.eye = 0;
     state.level = 0;
     state.trial = 0;
@@ -81,6 +98,7 @@
     $('testExamId').textContent = state.examId;
     $('eyeLabel').textContent = 'עין ימין';
     $('eyeHelp').textContent = 'כסו את עין שמאל בלי ללחוץ עליה. אם קשה לזהות, בחרו ניחוש.';
+    $('transitionHelp').textContent = `כסו את עין ימין בלי ללחוץ עליה, ושמרו על מרחק ${distanceLabel()} ועל אותו המסך.`;
     section('test');
     showSymbol();
   });
