@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>בדיקת ראייה מודרכת | EchoPulse</title>
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="vision.css?v=3">
+  <link rel="stylesheet" href="vision.css?v=4">
 </head>
 <body>
   <header class="topbar"><div class="brand">◉ EchoPulse <span class="brand-sub">/ בדיקת ראייה מודרכת</span></div><a class="back-link" href="index.html">חזרה לדמו ←</a></header>
@@ -23,6 +23,14 @@
       <input id="calibration" type="range" min="80" max="360" value="190" aria-describedby="cal-help">
       <div class="ruler-wrap"><div id="ruler" class="ruler"></div></div>
       <p id="cal-help" class="muted">הפס צריך למדוד בדיוק 5 ס״מ על סרגל אמיתי. שינוי גודל תצוגה או מכשיר מחייבים כיול מחדש.</p>
+      <div class="camera-guide" aria-labelledby="camera-heading">
+        <h3 id="camera-heading">סיוע אופציונלי מהמצלמה הקדמית</h3>
+        <p>אחרי שמודדים ידנית את המרחק שבחרתם, אפשר להפעיל את המצלמה ולשמור את גודל הפנים כנקודת ייחוס. המערכת תתריע על שינוי ניכר בגודל הפנים; היא אינה מודדת מרחק מדויק או מזהה כיסוי עין. מצלמה אחת לא מאמתת את המרחק ההתחלתי.</p>
+        <p class="muted">ההפעלה תבקש גישה למצלמה ותטען את MediaPipe וקובצי המודל משירותים חיצוניים. ניתוח התמונה מתבצע במכשיר; אין כאן שמירת וידאו או העברת תוצאות בדיקה. אפשר להמשיך גם בלי מצלמה.</p>
+        <div class="camera-actions"><button type="button" id="startCamera">הפעל מצלמה</button><button type="button" id="calibrateCamera" disabled>שמור נקודת ייחוס</button><button type="button" id="stopCamera" hidden>כבה מצלמה</button></div>
+        <video id="distanceCamera" autoplay playsinline muted hidden aria-label="תצוגת המצלמה הקדמית"></video>
+        <p id="cameraStatus" class="camera-status" role="status" aria-live="polite">המצלמה כבויה. מדדו את המרחק באופן ידני.</p>
+      </div>
       <label class="check-label"><input id="confirmed" type="checkbox"> <span id="confirmedText">כיילתי בעזרת סרגל ואני שומר על מרחק 40 ס״מ.</span></label>
       <button type="button" id="start" disabled>התחל ברצף המודרך</button>
     </section>
@@ -30,11 +38,12 @@
       <div class="test-head"><div><div class="eyebrow" id="eyeLabel">עין ימין</div><h2 id="test-heading">זהה את כיוון הפתח</h2></div><span id="progress" class="pill">—</span></div>
       <p class="exam-id">מזהה בדיקה: <b id="testExamId" dir="ltr"></b></p>
       <p id="eyeHelp" class="muted">כסו את עין שמאל בלי ללחוץ עליה. אם קשה לזהות, בחרו ניחוש.</p>
+      <p id="cameraTestStatus" class="camera-status" role="status" aria-live="polite" hidden></p>
       <div class="optotype-space"><div id="crowdingFrame" class="crowding-frame"><svg id="optotype" viewBox="0 0 5 5" aria-label="אות E מסובבת" role="img"><path fill="currentColor" d="M0 0H5V1H1V2H4V3H1V4H5V5H0Z"/></svg></div></div>
       <div class="direction-grid" aria-label="בחרו לאיזה כיוון פונה פתח האות"><button type="button" data-direction="up">↑ למעלה</button><button type="button" data-direction="right">→ ימינה</button><button type="button" data-direction="down">↓ למטה</button><button type="button" data-direction="left">← שמאלה</button></div>
       <p class="muted">כל בחירה מציגה סימן חדש. אין צורך להזיז את המסך בין הסימנים.</p>
     </section>
-    <section class="panel step" id="transition" hidden aria-labelledby="transition-heading"><div class="eyebrow" id="eyeStage">שלב 1 מתוך 5</div><h2 id="transition-heading">שתי העיניים פתוחות</h2><p id="transitionHelp">הסתכלו במסך בשתי עיניים פתוחות ושמרו על המרחק שבחרתם.</p><label class="check-label"><input id="coverConfirmed" type="checkbox"> <span id="coverText">שתי העיניים פתוחות ואני שומר על המרחק.</span></label><p class="muted">המערכת אינה מזהה את כיסוי העין או מודדת את המרחק באמצעות מצלמה; יש לוודא אותם ידנית.</p><button type="button" id="nextEye" disabled>הצג אותיות לשתי העיניים</button></section>
+    <section class="panel step" id="transition" hidden aria-labelledby="transition-heading"><div class="eyebrow" id="eyeStage">שלב 1 מתוך 5</div><h2 id="transition-heading">שתי העיניים פתוחות</h2><p id="transitionHelp">הסתכלו במסך בשתי עיניים פתוחות ושמרו על המרחק שבחרתם.</p><label class="check-label"><input id="coverConfirmed" type="checkbox"> <span id="coverText">שתי העיניים פתוחות ואני שומר על המרחק.</span></label><p class="muted">כיסוי העין והמרחק ההתחלתי מאושרים ידנית. אם המצלמה פעילה, היא מתריעה על שינוי יחסי בלבד.</p><button type="button" id="nextEye" disabled>הצג אותיות לשתי העיניים</button></section>
     <section class="panel step" id="rest" hidden aria-labelledby="rest-heading"><div class="eyebrow" id="restStage">שלב 2 מתוך 5</div><h2 id="rest-heading">עצמו את שתי העיניים</h2><p id="restHelp">עצמו את שתי העיניים. המסך מציג נקודה; מה אתם חווים בלי לפתוח אותן?</p><div class="rest-target" aria-hidden="true">●</div><div class="result-actions"><button type="button" data-rest-answer="no-detail">לא מזהה את הנקודה</button><button type="button" data-rest-answer="light-or-shape">רואה אור או צורה</button></div><p class="muted">זו שאלה תיאורית והפסקת מעבר בלבד; התשובה אינה ציון ראייה ואינה מאבחנת מצב רפואי.</p></section>
     <section class="panel step" id="results" hidden aria-labelledby="results-heading">
       <h2 id="results-heading">סיכום התרגיל</h2>
@@ -55,5 +64,6 @@
     <p class="vision-foot">התוצאה נשארת בזיכרון הדפדפן במהלך הבדיקה בלבד ואינה נשלחת לאתר או לשיחת הווידאו. לבדיקה ניידת שעברה מחקרי דיוק, אפשר להיעזר גם ב־<a href="https://www.who.int/teams/noncommunicable-diseases/sensory-functions-disability-and-rehabilitation/whoeyes" target="_blank" rel="noopener noreferrer">WHOeyes</a>, שאף היא אינה מחליפה בדיקת עיניים מקצועית.</p>
   </main>
   <script src="vision.js?v=3" defer></script>
+  <script src="vision-camera.js?v=1" defer></script>
 </body>
 </html>
