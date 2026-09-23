@@ -14,7 +14,7 @@
   function renderRoom() {
     $('roomPanel').hidden = false;
     $('sessionId').textContent = idForRoom(room);
-    const invite = new URL('session.html', location.href);
+    const invite = new URL('session.html?v=2', location.href);
     invite.hash = `room=${room}`;
     $('eyeCheckLink').href = `vision.html#session=${room}`;
     if (['https:', 'http:'].includes(invite.protocol) && !['localhost', '127.0.0.1'].includes(invite.hostname)) {
@@ -48,7 +48,7 @@
     }
   });
   $('consentVideo').addEventListener('change', () => {
-    $('joinVideo').disabled = !$('consentVideo').checked;
+    if ($('consentVideo').checked) $('videoStatus').textContent = '';
   });
 
   function loadJitsi() {
@@ -63,7 +63,12 @@
   }
 
   $('joinVideo').addEventListener('click', async () => {
-    if (!room || !$('consentVideo').checked || api) return;
+    if (!room || api) return;
+    if (!$('consentVideo').checked) {
+      $('videoStatus').textContent = 'כדי לפתוח וידאו, סמן/י תחילה את תיבת ההסכמה שמעל הכפתור.';
+      $('consentVideo').focus();
+      return;
+    }
     $('joinVideo').disabled = true;
     $('videoStatus').textContent = 'טוען את שירות הווידאו…';
     try {
