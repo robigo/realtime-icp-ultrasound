@@ -1,1 +1,2 @@
 .session-page input[readonly]{box-sizing:border-box;width:100%;padding:12px;color:#eaf6f9;background:#101b26;border:1px solid #456071;border-radius:6px;font:inherit}.session-page p{line-height:1.65}.session-page .result-actions{margin:14px 0}.video-frame{height:0;overflow:hidden;margin:18px 0}.video-frame.active{height:min(70vh,680px);min-height:360px}.video-frame iframe{border:0}.session-page #inviteHelp{min-height:20px}
+.session-page [hidden]{display:none}
