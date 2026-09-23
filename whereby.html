@@ -7,20 +7,20 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="vision.css">
   <link rel="stylesheet" href="session.css">
-  <link rel="stylesheet" href="whereby.css">
+  <link rel="stylesheet" href="whereby.css?v=2">
   <script type="module" src="https://cdn.srv.whereby.com/embed/v3-embed.js"></script>
-  <script src="whereby.js" defer></script>
+  <script src="whereby.js?v=2" defer></script>
 </head>
 <body>
   <header class="topbar"><div class="brand">◉ EchoPulse <span class="brand-sub">/ וידאו ניסיוני</span></div><a class="back-link" href="index.html">חזרה לדמו ←</a></header>
   <main class="vision-page session-page">
-    <div class="eyebrow" id="meetingProvider">Whereby Embedded / בדיקה טכנית</div>
+    <div class="eyebrow" id="meetingProvider">Jitsi / בדיקה טכנית</div>
     <h1>שיחת וידאו בתוך הדף</h1>
-    <p class="lead" id="meetingIntro">חדר Whereby נוצר באמצעות שרת מקומי ששומר את מפתח ה־API מחוץ לדפדפן. באתר הציבורי אפשר ליצור קישור לחדר ניסיון בשירות Jitsi.</p>
+    <p class="lead" id="meetingIntro">באתר הציבורי יוצרים קישור לחדר ניסיון ב־Jitsi. יצירת חדר Whereby זמינה רק עם השרת המקומי שמחזיק את מפתח ה־API.</p>
     <section class="panel step">
-      <h2 id="meetingHeading">צור חדר ניסיון</h2>
+      <h2 id="meetingHeading">צור חדר וידאו לניסיון</h2>
       <p>השתמש רק באדם שמסכים להשתתף בניסוי טכני. המסלול החינמי אינו מסלול לשיחות רפואיות עם מטופלים.</p>
-      <button id="createMeeting" type="button">צור חדר וקישור ב־Whereby</button>
+      <div class="result-actions"><a id="publicMeeting" href="session.html?v=2">פתח יצירת חדר ב־Jitsi</a><button id="createMeeting" type="button" hidden>צור חדר וקישור ב־Whereby</button></div>
       <p id="status" class="muted" role="status" aria-live="polite"></p>
     </section>
     <section class="panel step" id="roomPanel" hidden>
