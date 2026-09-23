@@ -1,6 +1,11 @@
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
+  if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
+    $('createMeeting').disabled = true;
+    $('status').textContent = 'יצירת חדר Whereby זמינה רק בשרת המקומי. דף ציבורי ב־GitHub Pages אינו כולל שרת API; אפשר להשתמש בקישור לפגישה קיימת בדף הראשי.';
+    return;
+  }
   $('createMeeting').addEventListener('click', async () => {
     $('createMeeting').disabled = true;
     $('status').textContent = 'יוצר חדר ניסיון…';
