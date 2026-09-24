@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>בדיקת ראייה מודרכת | EchoPulse</title>
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="vision.css?v=4">
+  <link rel="stylesheet" href="vision.css?v=5">
 </head>
 <body>
   <header class="topbar"><div class="brand">◉ EchoPulse <span class="brand-sub">/ בדיקת ראייה מודרכת</span></div><a class="back-link" href="index.html">חזרה לדמו ←</a></header>
   <main class="vision-page">
     <div class="eyebrow">בדיקת ראייה / תרגיל אוטומטי מודרך</div><h1>לאיזה כיוון פונה האות E?</h1>
+    <p class="exam-id"><a href="research.html">מעבר למסלול המחקרי המומלץ (כולל שקלול ומקורות) ↗</a></p>
     <p class="lead">המסך ינחה אותך בחמישה שלבים: שתי עיניים פתוחות, עצימת שתיהן, עין ימין בלבד, עצימת שתיהן שוב ועין שמאל בלבד. בכל שלב תופיע שאלה, ובסוף יוצג סיכום. התרגיל אינו בדיקה רפואית מאומתת או אבחנה.</p>
     <p class="exam-id" id="setupLinkedCall" hidden>מזהה פגישה משויך: <b id="setupLinkedCallId" dir="ltr"></b></p>
     <section class="panel step" id="setup" aria-labelledby="setup-heading">
@@ -61,6 +62,16 @@
       <div class="result-actions"><button type="button" id="copyResult">העתק סיכום</button><a id="shareWhatsapp" target="_blank" rel="noopener noreferrer">שתף בוואטסאפ</a><button type="button" id="again">התחל מחדש</button></div>
       <p id="copyStatus" class="muted" role="status" aria-live="polite"></p><p class="muted">השיתוף נפתח רק לפי בחירתך. המזהה אינו מאפשר לאתר את התוצאה אוטומטית; איש המקצוע צריך לקבל ממך את הסיכום. אין לשלוח פרטים מזהים נוספים ללא צורך.</p>
     </section>
+    <details class="research-sources"><summary>המקורות הרפואיים להשוואה מחקרית</summary>
+      <p>אלה מחקרים והנחיות להשוואת שיטות. תוצאותיהם אינן מהוות תיקוף של תרגיל EchoPulse, ופרוטוקול או מכשיר שונים מחייבים בדיקת אמינות נפרדת.</p>
+      <ul>
+        <li><a href="https://tvst.arvojournals.org/article.aspx?articleid=2748706" target="_blank" rel="noopener noreferrer">Vision at Home — פיתוח ותיקוף של בדיקת חדות ראייה בטלפון (TVST, 2019)</a>: מקור להשוואת אלגוריתם ומבנה הבדיקה.</li>
+        <li><a href="https://bjo.bmj.com/content/108/11/1613" target="_blank" rel="noopener noreferrer">WHOeyes — מחקר שימוש בעולם האמיתי עם כיול מרחק אוטומטי (BJO, 2024)</a>: מקור להשוואת בקרת מרחק.</li>
+        <li><a href="https://pubmed.ncbi.nlm.nih.gov/26022921/" target="_blank" rel="noopener noreferrer">Peek Acuity — מחקר תיקוף מול לוחות חדות ראייה (JAMA Ophthalmology, 2015)</a>: דוגמה להשוואה לשיטת ייחוס ולחזרתיות.</li>
+        <li><a href="https://pubmed.ncbi.nlm.nih.gov/42266518/" target="_blank" rel="noopener noreferrer">WHOeyes — בדיקת תוקף ומהימנות בסקר קהילתי (Indian Journal of Community Medicine, 2026)</a>: מחקר נוסף בהקשר של סקר ראייה.</li>
+        <li><a href="https://www.nei.nih.gov/about/education-and-outreach/glaucoma-resources/national-eye-institute-statement-detection-glaucoma-and-adult-vision-screening" target="_blank" rel="noopener noreferrer">National Eye Institute — הנחיות לגבי סקר ראייה במבוגרים</a>: מסגרת קלינית להבדל בין סקר לבין בירור מקצועי.</li>
+      </ul>
+    </details>
     <p class="vision-foot">התוצאה נשארת בזיכרון הדפדפן במהלך הבדיקה בלבד ואינה נשלחת לאתר או לשיחת הווידאו. לבדיקה ניידת שעברה מחקרי דיוק, אפשר להיעזר גם ב־<a href="https://www.who.int/teams/noncommunicable-diseases/sensory-functions-disability-and-rehabilitation/whoeyes" target="_blank" rel="noopener noreferrer">WHOeyes</a>, שאף היא אינה מחליפה בדיקת עיניים מקצועית.</p>
   </main>
   <script src="vision.js?v=3" defer></script>

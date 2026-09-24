@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>מסלול מחקרי מומלץ | EchoPulse</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="vision.css?v=5">
+  <link rel="stylesheet" href="research.css?v=1">
+</head>
+<body>
+  <header class="topbar"><div class="brand">◉ EchoPulse <span class="brand-sub">/ מסלול מחקרי מומלץ</span></div><a class="back-link" href="vision.html">לתרגיל הניסיוני ←</a></header>
+  <main class="vision-page research-page">
+    <div class="eyebrow">EchoPulse Research v1 / אב־טיפוס לבדיקת אמינות</div>
+    <h1>בדיקת חדות ראייה למחקר</h1>
+    <p class="lead">שלושה תנאים באותו סבב: ראייה לקרוב בשתי עיניים ב־40 ס״מ, ואז ראייה למרחק בעין ימין ובעין שמאל בנפרד ב־2 מטרים. בסיום אפשר לבצע סבב חוזר עם אותו מזהה ולהוריד נתונים להשוואה. זהו תכנון מחקרי שטרם תוקף; אינו מחליף בדיקה אצל איש מקצוע.</p>
+
+    <details class="research-sources" open><summary>כיצד שוקלל התכנון? מקורות והחלטות</summary>
+      <p>המשקולות הן סדרי עדיפות שקבענו לתכנון האפליקציה; הן אינן שקלול סטטיסטי של המחקרים, ציון לנבדק או דיוק רפואי מוכח. WHOeyes התפתחה מ־Vision at Home, ולכן לא התייחסנו אליה כראיה עצמאית נוספת לאותו אלגוריתם.</p>
+      <table class="method-table"><thead><tr><th>משקל תכנוני</th><th>החלטה במסלול הזה</th><th>מקור</th></tr></thead><tbody>
+        <tr><td>40%</td><td>אות E מסתובבת, חמש תשובות לגודל, מעבר ב־4/5; קרוב בשתי עיניים ורחוק לכל עין.</td><td><a href="https://researchmgt.monash.edu/ws/portalfiles/portal/474533774/474520749.pdf" target="_blank" rel="noopener noreferrer">Vision at Home, 2019</a></td></tr>
+        <tr><td>30%</td><td>כיול מסך בסרגל, מרחק שנמדד פיזית ואישור תנאים לפני כל שלב. התרעת מצלמה ניסיונית בדף האחר אינה מדידה מאומתת.</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/38514167/" target="_blank" rel="noopener noreferrer">WHOeyes, 2024</a>; <a href="https://researchmgt.monash.edu/ws/portalfiles/portal/474533774/474520749.pdf" target="_blank" rel="noopener noreferrer">Vision at Home</a></td></tr>
+        <tr><td>20%</td><td>שמירת תשובות גולמיות בדפדפן, הורדה יזומה וסבב חוזר להשוואת חזרתיות. השוואה ללוח ETDRS עדיין מחייבת מחקר נפרד.</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/26022921/" target="_blank" rel="noopener noreferrer">Peek Acuity, 2015</a>; <a href="https://jamanetwork.com/journals/jamaophthalmology/fullarticle/2668281" target="_blank" rel="noopener noreferrer">ETDRS, 2018</a></td></tr>
+        <tr><td>10%</td><td>הנחיות קצרות ודוח ברור לפי תנאי בדיקה, ללא ממוצע רפואי בין עיניים או מרחקים.</td><td><a href="https://www.who.int/teams/noncommunicable-diseases/sensory-functions-disability-and-rehabilitation/whoeyes" target="_blank" rel="noopener noreferrer">WHO, WHOeyes</a></td></tr>
+      </tbody></table>
+      <p class="muted">הסדר והמשקולות הם <strong>הצעת מחקר שלנו</strong>. לא הועברו לאפליקציה מדדי הדיוק שפורסמו במחקרים. תנאי צפייה, מכשירים ואופן התגובה שונים ועשויים לשנות תוצאה.</p>
+    </details>
+
+    <section class="panel step" id="prep" aria-labelledby="prepHeading">
+      <div class="eyebrow" id="prepProgress">סבב 1 · תנאי 1 מתוך 3</div>
+      <h2 id="prepHeading">קרוב · שתי העיניים פתוחות</h2>
+      <p id="prepHelp"></p>
+      <ol><li>מדדו את המרחק <strong id="prepDistance">40 ס״מ</strong> מהעיניים עד למסך באמצעות סרגל או סרט מדידה. שמרו על מסך בגובה העיניים ועל תאורה טובה; כוונו את בהירות המסך לגבוהה שנוחה לכם.</li><li>הרכיבו את המשקפיים שאתם משתמשים בהם בדרך כלל למרחק זה. בשלב הרחוק היעזרו באדם נוסף שיחזיק את המסך ויקליד את התשובות שהנבדק אומר.</li><li>הצמידו סרגל פיזי למסך והתאימו את הפס הבא לאורך <strong>5 ס״מ</strong>. בדקו מחדש בכל שינוי מכשיר, זום או כיוון מסך.</li></ol>
+      <label for="calibration">התאם אורך 5 ס״מ בסרגל</label>
+      <input id="calibration" type="range" min="80" max="360" value="190">
+      <div class="ruler-wrap"><div id="ruler" class="ruler"></div></div>
+      <label class="check-label"><input id="confirmed" type="checkbox"> <span id="confirmedText">מדדתי את המרחק, כיילתי 5 ס״מ והכנתי את תנאי הבדיקה.</span></label>
+      <p id="prepError" class="research-alert" role="status" hidden></p>
+      <div class="result-actions"><button type="button" id="startStage" disabled>התחל את השלב</button><button type="button" id="skipStage" hidden>סמן שלב כבלתי ניתן למדידה והמשך</button></div>
+    </section>
+
+    <section class="panel step" id="test" aria-labelledby="testHeading" hidden>
+      <div class="test-head"><div><div class="eyebrow" id="testProgress"></div><h2 id="testHeading">לאיזה כיוון פונה האות E?</h2></div><span class="pill" id="symbolCount"></span></div>
+      <p id="testHelp" class="muted"></p>
+      <div class="optotype-space"><div class="crowding-frame" id="crowdingFrame"><svg id="optotype" viewBox="0 0 5 5" role="img" aria-label="אות E מסובבת"><path fill="currentColor" d="M0 0H5V1H1V2H4V3H1V4H5V5H0Z"/></svg></div></div>
+      <div class="direction-grid" aria-label="בחר את הכיוון של האות"><button type="button" data-direction="up">↑ למעלה</button><button type="button" data-direction="right">→ ימינה</button><button type="button" data-direction="down">↓ למטה</button><button type="button" data-direction="left">← שמאלה</button></div>
+      <p class="muted">כל לחיצה מציגה אות חדשה. במרחק 2 מטרים נבדק אומר את הכיוון והמסייע מקליד אותו.</p>
+    </section>
+
+    <section class="panel step" id="results" aria-labelledby="resultsHeading" hidden>
+      <h2 id="resultsHeading">סיכום מסלול מחקרי</h2>
+      <p class="exam-id">מזהה בדיקה: <b id="examId" dir="ltr"></b></p>
+      <p id="resultContext" class="muted"></p>
+      <div id="resultRows" class="research-results"></div>
+      <p id="comparison" class="result-comparison"></p>
+      <p class="muted">הערכים הם גדלי אות תיאורטיים לפי כיול ומרחק שאושרו ידנית. מעבר גודל אינו אחוז ראייה, מספר עדשות או אבחנה. במקרה של מגבלת מסך אין לקבוע סף חדות ראייה מהגודל האחרון שהוצג. השוואה קלינית וחזרתיות מחייבות מדידה חוזרת מול לוח ייחוס באותם משתתפים.</p>
+      <label for="shareText">טקסט להעתקה למחקר</label><textarea id="shareText" rows="10" readonly></textarea>
+      <div class="result-actions"><button type="button" id="repeat">בצע סבב חוזר באותו מזהה</button><button type="button" id="download">הורד נתוני ניסוי JSON</button><button type="button" id="copy">העתק סיכום</button><button type="button" id="restart">התחל בדיקה חדשה</button></div>
+      <p id="copyStatus" role="status" class="muted"></p>
+      <p class="muted">נתוני התשובות נשמרים בזיכרון הדפדפן רק עד עזיבת הדף. הקובץ יורד למכשיר רק בלחיצה על הורדה; אין העלאה אוטומטית של נתונים או מזהים.</p>
+    </section>
+  </main>
+  <script src="research.js?v=1" defer></script>
+</body>
+</html>

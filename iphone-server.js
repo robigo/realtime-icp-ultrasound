@@ -20,7 +20,7 @@ if (!privateAddress) {
 const port = 8082;
 const allowed = new Set([
   'index.html', 'styles.css', 'consultation.css', 'app.js', 'data.js',
-  'vision.html', 'vision.css', 'vision.js'
+  'vision.html', 'vision.css', 'vision.js', 'vision-camera.js', 'research.html', 'research.css', 'research.js'
 ]);
 const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript' };
 const server = http.createServer(async (req, res) => {

@@ -9,7 +9,7 @@ const port = Number(process.env.ECHOPULSE_PORT || 8080);
 const host = '127.0.0.1';
 const origin = `http://${host}:${port}`;
 const key = process.env.WHEREBY_API_KEY;
-const allowed = new Set(['whereby.html', 'whereby.js', 'whereby.css', 'styles.css', 'vision.css', 'session.css', 'index.html', 'app.js', 'data.js', 'vision.html', 'vision.js', 'vision-camera.js', 'session.html', 'session.js']);
+const allowed = new Set(['whereby.html', 'whereby.js', 'whereby.css', 'styles.css', 'vision.css', 'session.css', 'index.html', 'app.js', 'data.js', 'vision.html', 'vision.js', 'vision-camera.js', 'research.html', 'research.js', 'research.css', 'session.html', 'session.js']);
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8' };
 
 function reply(res, status, data, type = 'application/json; charset=utf-8') {
