@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EchoPulse | ספקטרום משרעת ופאזה</title>
+  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="spectrum.css">
+</head>
+<body>
+  <header class="topbar"><div class="brand">◉ EchoPulse / ניתוח תדרים</div><a href="index.html">חזרה לגלים ←</a></header>
+  <main>
+    <div class="heading"><div><div class="eyebrow">SPECTRUM / משרעת ומופע</div><h1>מהגל אל <span>התדרים</span></h1><p>תצוגה בהשראת החלון במערכת הישנה, מחושבת מדגימות ההדגמה הקיימות.</p></div><span class="tag">מקור סינתטי · הדגמה בלבד</span></div>
+    <section class="panel spectrum-controls" aria-label="בחירת נתונים">
+      <label>אות לניתוח<select id="signal"><option value="icp_proxy_z">גל ICP מדומה — יחידות תקן</option><option value="ppg_reference_0_1">ייחוס PPG סינתטי — יחידות יחסיות</option><option value="echo_displacement_samples">תזוזת הד סינתטית — דגימות</option></select></label>
+      <label>קטע לניתוח<select id="segment"><option value="all">כל ההקלטה — 12 שניות</option><option value="first">6 השניות הראשונות</option><option value="last">6 השניות האחרונות</option></select></label>
+      <label>חלון חישוב<select id="window"><option value="hann">Hann — צמצום זליגת תדר</option><option value="rectangular">ללא שקלול — מלבני</option></select></label>
+    </section>
+    <p id="source" class="source" role="status"></p><p id="error" role="alert"></p>
+    <section class="stats" aria-label="פרטי החישוב">
+      <article><label>קצב דגימה</label><div><strong id="fs">—</strong> <span>Hz</span></div></article>
+      <article><label>רזולוציית תדר</label><div><strong id="resolution">—</strong> <span>Hz</span></div></article>
+      <article><label>תדר שיא ספקטרלי</label><div><strong id="peak">—</strong> <span>Hz</span></div><small>אינו אומדן אוטומטי לקצב לב</small></article>
+      <article><label>מספר דגימות</label><div><strong id="count">—</strong></div></article>
+    </section>
+    <section class="panel" aria-labelledby="plot-title">
+      <div class="panel-head"><h2 id="plot-title">ספקטרום האות הנבחר</h2><span class="pill">משרעת + פאזה</span></div>
+      <div class="legend"><span><i class="swatch cyan"></i>משרעת — ציר שמאל</span><span><i class="swatch lavender"></i>פאזה — ציר ימין, רדיאנים</span><span id="baselineLegend" hidden><i class="swatch coral"></i>משרעת בסיס</span></div>
+      <div class="plot spectrum-plot"><canvas id="spectrum" role="img" aria-label="משרעת לפי תדר ופאזה בין מינוס פאי לפאי"></canvas></div>
+      <p id="summary" class="note"></p>
+      <div class="spectrum-actions"><button id="baseline" type="button" disabled>קבע כבסיס להשוואה</button><button id="clear" type="button" disabled>נקה בסיס</button><button id="export" type="button" disabled>ייצוא ספקטרום CSV</button></div>
+      <p id="baselineStatus" class="note" aria-live="polite">טרם נקבע בסיס. הבסיס נשמר בזיכרון הלשונית בלבד.</p>
+    </section>
+    <section class="panel explanation"><h2>איך לקרוא את הגרף</h2><p>ציר X הוא תדר בהרץ. המשרעת מוצגת ביחידות האות שנבחר; הפאזה ביחס לתחילת הקטע, בטווח ‎−π עד ‎+π. נקודות הפאזה מוצגות רק כשמשרעת התדר עולה על 1% מהשיא ועל סף מספרי קטן.</p><p>המקור נדגם ב־50 הרץ, ולכן ניתן להציג עד 25 הרץ. הוסרו הממוצע ורכיב התדר האפסי. שינוי הקטע משנה גם את ייחוס הפאזה.</p><p>מדדים מסכמים כמו קצב לב, יחס P2/P1 או מדדי התוכנה הישנה אינם מספיקים לשחזור ספקטרום. זהו חישוב חדש מתוך אות סינתטי, ולא שחזור של האלגוריתם או המדידה בצילום. קובצי ‎.pnt עדיין אינם נתמכים.</p></section>
+    <div class="disclaimer">הדגמה מחקרית בלבד. הגרף אינו מדידת לחץ ואינו כלי לאבחון רפואי.</div>
+  </main>
+  <script src="data.js" defer></script><script src="spectrum-core.js" defer></script><script src="spectrum.js" defer></script>
+</body></html>
