@@ -1,0 +1,45 @@
+name: EchoPulse synthetic spectrum
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: spectrum-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  spectrum:
+    name: Synthetic spectrum / Chromium
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # This static site has no package.json. Pin the test-only dependency
+      # and use its matching browser installer; do not modify site assets.
+      - name: Install Playwright
+        run: npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.1
+      - name: Install Chromium and operating system dependencies
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Check amplitude and phase calculations
+        run: node tests/spectrum.cjs
+      - name: Check spectrum UI integration
+        run: node tests/spectrum-ui.cjs
+      - name: Check spectrum in Chromium (desktop and mobile)
+        run: node tests/spectrum-browser.cjs
+      - name: Upload browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-spectrum-screenshots
+          path: /tmp/echo-spectrum*.png
+          if-no-files-found: ignore
+          retention-days: 7
