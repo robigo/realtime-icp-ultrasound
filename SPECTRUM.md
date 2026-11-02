@@ -24,9 +24,28 @@ Summary measures (HR, P2/P1, legacy indices) cannot uniquely recover amplitude o
 phase spectra. Legacy `.pnt` decoding, proprietary indices and clinical calibration
 remain out of scope until original files and documentation are available.
 
-Validation: `node tests/spectrum.cjs` checks known sinusoid amplitude/phase,
-constant input, Nyquist normalization and invalid or nonuniform samples.
-`node tests/spectrum-ui.cjs` checks DOM integration and CSV metadata with a canvas
-stub. Optional real-browser coverage is in `tests/spectrum-browser.cjs` (requires
-Playwright and its Chromium binary); this browser test could not run in the
-implementation environment because the browser binary was not installed.
+## Automated validation
+
+The **EchoPulse synthetic spectrum** GitHub Actions workflow runs on pull requests,
+pushes to `main`, and manual dispatch. It uses Node.js 22, installs the pinned
+test-only dependency `playwright@1.56.1`, and installs its matching Chromium binary
+and operating system dependencies with `playwright install --with-deps chromium`.
+
+The workflow runs:
+
+- `node tests/spectrum.cjs`: known sinusoid amplitude/phase, constant input,
+  Nyquist normalization, and invalid or nonuniform samples.
+- `node tests/spectrum-ui.cjs`: DOM integration and CSV metadata with a canvas stub.
+- `node tests/spectrum-browser.cjs`: rendered canvas and parameter redraws, all
+  three synthetic signals, segment/window selection, baseline visibility and
+  clearing, CSV download with synthetic-source metadata, page errors, and
+  horizontal overflow at 1280 and 390 pixels.
+
+Browser screenshots are uploaded as the `synthetic-spectrum-screenshots`
+artifact and retained for seven days. A failure screenshot is captured when the
+page is available; browser installation/launch failures are reported in job logs.
+
+For local browser checks, install the same Playwright version and Chromium first.
+The tests open the local static HTML; they do not contact medical hardware or load
+patient measurements. Passing CI validates the synthetic demonstration only. It
+does not validate real measurement processing, clinical accuracy, or a medical device.
